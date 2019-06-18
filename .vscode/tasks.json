@@ -1,55 +1,25 @@
 {
-    "version": "2.0.0",
     "tasks": [
-        {
-            "label": "build",
-            "type": "shell",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "windows": {
-                "command": "powershell"
-            },
-            "linux": {
-                "command": "bash"
-            },
-            "args": [
-                "-c",
-                "mingw32-make"
-            ]
+      {
+        "type": "shell",
+        "label": "build project",
+        "command": "C:\\MinGW\\bin\\g++.exe",
+        "args": [
+          "-g",
+          "-I${workspaceFolder}\\include",
+          "${workspaceFolder}\\src\\main.cpp",
+          "${workspaceFolder}\\src\\CommandHandler.cpp",
+          "-o",
+          "${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe"
+        ],
+        "options": {
+          "cwd": "C:\\MinGW\\bin"
         },
-        {
-            "label": "build & run",
-            "type": "shell",
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            },
-            "windows": {
-                "command": "powershell"
-            },
-            "linux": {
-                "command": "bash"
-            },
-            "args": [
-                "-c",
-                "mingw32-make run"
-            ]
-        },
-        {
-            "label": "clean",
-            "type": "shell",
-            "windows": {
-                "command": "powershell"
-            },
-            "linux": {
-                "command": "bash"
-            },
-            "args": [
-                "-c",
-                "mingw32-make clean"
-            ]
+        "group": {
+          "kind": "build",
+          "isDefault": true
         }
-    ]
-}
+      }
+    ],
+    "version": "2.0.0"
+  }
