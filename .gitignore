@@ -1,4 +1,5 @@
 
-.vscode\ipch
-.vscode\ipch\*
-.vscode\ipch\
+.vscode/ipch
+.vscode/ipch/*
+.vscode/ipch/
+bin/
