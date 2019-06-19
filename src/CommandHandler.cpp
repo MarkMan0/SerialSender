@@ -30,8 +30,9 @@ void CommandHandler::run() {
     do {
         cout << "Enter cmd" << endl;
         getline(cin, cmd);
+        string actCmd = cmd.substr(0, cmd.find_first_of(" "));  //search the string for space or \0
         try {
-            cmdMap->at(cmd)->execute();
+            cmdMap->at(cmd)->execute(cmd);
         } catch (out_of_range e) {
             cout << "Unknown command: " << cmd << endl;
         }
