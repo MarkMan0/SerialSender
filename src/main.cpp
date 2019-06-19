@@ -9,17 +9,14 @@
 #include "Command.h"
 #include "CommandHandler.h"
 #include "SerialPort.h"
+#include "commands\send.h"
 
 int main()
 { 
     using namespace std;
     
-    
-    SerialPort port;
-
-    port.send("M122");
-
-    cout << port.lastResponse() << endl;
+    CommandHandler handler;
+    handler.run();
 
     cout << "END" << endl;
     system("pause");

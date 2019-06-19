@@ -10,8 +10,9 @@
           //"${workspaceFolder}\\src\\main.cpp",
           //"${workspaceFolder}\\src\\CommandHandler.cpp",
           "${workspaceFolder}\\src\\*",
+          "-Wall",
           "-o",
-          "${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe"
+          "${workspaceFolder}\\bin\\main.exe"
         ],
         "options": {
           "cwd": "C:\\MinGW\\bin"
