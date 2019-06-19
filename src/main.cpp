@@ -9,13 +9,16 @@
 #include "Command.h"
 #include "CommandHandler.h"
 #include "SerialPort.h"
-#include "commands\send.h"
+#include "commands\Send.h"
 
 int main()
 { 
     using namespace std;
     
     CommandHandler handler;
+    SerialPort port;
+
+    handler.registerCommand(new Commands::SendCmd(&port));
     handler.run();
 
     cout << "END" << endl;

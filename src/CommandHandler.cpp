@@ -3,12 +3,12 @@
 #include <map>
 #include <memory>
 #include <iostream>
+#include <string>
 
 #include "Command.h"
 
     
 void CommandHandler::registerCommand(Command* cmd) {
-
 
     if(!cmdMap->insert(std::make_pair(cmd->getName(), std::unique_ptr<Command>(cmd))).second) {
         //TODO:: throw some exception
@@ -30,11 +30,11 @@ void CommandHandler::run() {
     do {
         cout << "Enter cmd" << endl;
         getline(cin, cmd);
-        string actCmd = cmd.substr(0, cmd.find_first_of(" "));  //search the string for space or \0
+        string actCmd = cmd.substr(0, cmd.find_first_of(" "));  //search the string for space or \0;
         try {
-            cmdMap->at(cmd)->execute(cmd);
+            cmdMap->at(actCmd)->execute(cmd);
         } catch (out_of_range e) {
-            cout << "Unknown command: " << cmd << endl;
+            cout << "Unknown command: " << cmd << endl << e.what() << endl;
         }
 
     } while( cmd[0] != 'C');

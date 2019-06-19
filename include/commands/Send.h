@@ -12,7 +12,7 @@ namespace Commands {
         SerialPort* port;
 
     public:
-        SendCmd() : Command("Send") {}
+        SendCmd(SerialPort* port);
         void execute(const std::string&);
 
     };

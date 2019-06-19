@@ -6,10 +6,12 @@
         "command": "C:\\MinGW\\bin\\g++.exe",
         "args": [
           "-g",
+          "-O0",
           "-I${workspaceFolder}\\include",
           //"${workspaceFolder}\\src\\main.cpp",
           //"${workspaceFolder}\\src\\CommandHandler.cpp",
-          "${workspaceFolder}\\src\\*",
+          "${workspaceFolder}\\src\\*.cpp",
+          "${workspaceFolder}\\src\\commands\\*.cpp",
           "-Wall",
           "-o",
           "${workspaceFolder}\\bin\\main.exe"

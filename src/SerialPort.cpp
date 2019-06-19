@@ -75,6 +75,7 @@ void SerialPort::readErr() {
 void SerialPort::send(const std::string& cmd) {
 
     std::string msg = cmd + "\r";
+    readErr();
     DWORD bytesRW = 0;
     memset(buff, '\0', buffSz);
     if(!WriteFile(hSerial, msg.c_str(), msg.size(), &bytesRW, NULL)) {
