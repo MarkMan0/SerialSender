@@ -7,8 +7,9 @@
         "args": [
           "-g",
           "-I${workspaceFolder}\\include",
-          "${workspaceFolder}\\src\\main.cpp",
-          "${workspaceFolder}\\src\\CommandHandler.cpp",
+          //"${workspaceFolder}\\src\\main.cpp",
+          //"${workspaceFolder}\\src\\CommandHandler.cpp",
+          "${workspaceFolder}\\src\\*",
           "-o",
           "${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe"
         ],

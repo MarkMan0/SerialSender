@@ -1,10 +1,10 @@
-#include "CommandHandler.hpp"
+#include "CommandHandler.h"
 
 #include <map>
 #include <memory>
 #include <iostream>
 
-#include "Command.hpp"
+#include "Command.h"
 
     
 void CommandHandler::registerCommand(Command* cmd) {
