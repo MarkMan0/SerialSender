@@ -22,5 +22,6 @@ public:
     ~SerialPort();
 
     void send(const std::string& cmd);
+    const std::string& receive();
     const std::string& lastResponse() const;
 };

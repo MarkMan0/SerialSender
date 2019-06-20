@@ -75,25 +75,29 @@ void SerialPort::readErr() {
 void SerialPort::send(const std::string& cmd) {
 
     std::string msg = cmd + "\r";
-    readErr();
-    DWORD bytesRW = 0;
+    
+    DWORD bytesSent = 0;
     memset(buff, '\0', buffSz);
-    if(!WriteFile(hSerial, msg.c_str(), msg.size(), &bytesRW, NULL)) {
+    if(!WriteFile(hSerial, msg.c_str(), msg.size(), &bytesSent, NULL)) {
         readErr();
         //TODO: Handle properly
         std::cout << "ERR Send" << std::endl << "\t" << lastErrBuff << std::endl;
     }
 
+}
+
+const std::string& SerialPort::receive() {
+    DWORD bytesRead = 0;
     //get response
-    if(!ReadFile(hSerial, buff, buffSz, &bytesRW, NULL)){
+    if(!ReadFile(hSerial, buff, buffSz, &bytesRead, NULL)){
         //error occurred. Report to user.
         readErr();
         std::cout << "ERR read" << std::endl << "\t" << lastErrBuff << std::endl;
     }
     response.clear();
     response = buff;
+    return response;
 }
-
 
 const std::string& SerialPort::lastResponse() const {
     return response;
