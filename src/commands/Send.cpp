@@ -13,3 +13,8 @@ void Commands::SendCmd::execute(const std::string& line) {
     port->send(msg);
     std::cout << port->lastResponse() << std::endl;
 }
+
+
+Command* Commands::SendCmd::clone() const {
+    return new SendCmd(this->port);
+}

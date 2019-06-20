@@ -14,7 +14,7 @@ namespace Commands {
     public:
         SendCmd(SerialPort* port);
         void execute(const std::string&);
-
+        Command* clone() const;
     };
 
 }   
