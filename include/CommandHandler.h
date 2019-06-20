@@ -12,9 +12,9 @@ private:
     /* data */
     typedef std::map< std::string, std::unique_ptr<Command> > cmdContainer;
 
-    std::unique_ptr< cmdContainer > cmdMap;
+    cmdContainer cmdMap;
 public:
-    CommandHandler(/* args */) : cmdMap(new cmdContainer) {}
+    CommandHandler(/* args */) {}
     ~CommandHandler() { }
     void registerCommand(Command*);
     void deleteCommand(const std::string& name);
