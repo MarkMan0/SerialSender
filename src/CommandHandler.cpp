@@ -9,9 +9,14 @@
 
     
 void CommandHandler::registerCommand(Command* cmd) {
-
     if(!cmdMap.insert(std::make_pair(cmd->getName(), std::unique_ptr<Command>(cmd))).second) {
         //TODO:: throw some exception
+    }
+}
+
+CommandHandler::CommandHandler(const CommandHandler& old) {
+    for(const auto& it : old.cmdMap) {
+        this->cmdMap.insert(std::make_pair(it.first, std::unique_ptr<Command>(it.second->clone())));
     }
 }
 

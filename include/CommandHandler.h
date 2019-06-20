@@ -15,6 +15,7 @@ private:
     cmdContainer cmdMap;
 public:
     CommandHandler(/* args */) {}
+    CommandHandler(const CommandHandler& );
     ~CommandHandler() { }
     void registerCommand(Command*);
     void deleteCommand(const std::string& name);
