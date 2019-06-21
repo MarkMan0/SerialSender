@@ -33,6 +33,7 @@
         "typeinfo": "cpp",
         "utility": "cpp",
         "map": "cpp",
-        "deque": "cpp"
+        "deque": "cpp",
+        "queue": "cpp"
     }
 }

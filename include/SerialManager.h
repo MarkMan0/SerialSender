@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SerialPort.h>
-#include <stack>
+#include <queue>
 #include <string>
 
 class SerialManager {
@@ -12,8 +12,8 @@ public:
 
 private:
     SerialPort port;
-    typedef std::stack<std::string> MsgCont;
-    MsgCont *msgStack;
+    typedef std::queue<std::string> MsgCont;
+    MsgCont *msgCont;
     void logString(const std::string& );
 
 public:

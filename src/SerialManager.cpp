@@ -4,7 +4,7 @@
 #include <windows.h>
 
 
-SerialManager::SerialManager(const std::string& name, const long& baud) {
+SerialManager::SerialManager(const std::string& name, const long& baud) : msgCont(new MsgCont) {
 
     DCB params = {};
     
