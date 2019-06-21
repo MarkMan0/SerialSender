@@ -32,6 +32,7 @@
         "tuple": "cpp",
         "typeinfo": "cpp",
         "utility": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "deque": "cpp"
     }
 }
