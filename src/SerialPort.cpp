@@ -5,7 +5,7 @@
 #include <string>
 
 SerialPort::~SerialPort() {
-    closeSerial();
+    close();
     delete[] buff;
 }
 
@@ -42,7 +42,7 @@ void SerialPort::open(const std::string& name, DCB paramsArg, COMMTIMEOUTS timeo
 }
 
 
-void SerialPort::closeSerial() {
+void SerialPort::close() {
     CloseHandle(hSerial);
 }
 

@@ -37,9 +37,14 @@ SerialManager::SerialManager(const std::string& name, const long& baud) {
 void SerialManager::readPort() {
     if(!isOpen()) return;
 
-    portMtx.lock();
+    portMtx.lock(); //TODO:: called periodically, need to wait???
 
     msgCont.push(port.receive());  //TODO: thread safe?
 
     portMtx.unlock();
+}
+
+
+void SerialManager::closePort() {
+    port.close();
 }

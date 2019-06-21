@@ -13,7 +13,6 @@ private:
     std::string cmd;
     std::string response;
     void initSerial();
-    void closeSerial();
 
     void readErr();
 
@@ -21,6 +20,7 @@ public:
     SerialPort();
 
     void open(const std::string&, DCB, COMMTIMEOUTS);
+    void close();
 
     ~SerialPort();
 

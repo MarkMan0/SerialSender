@@ -16,7 +16,6 @@ private:
     SerialPort port;
     typedef QueueWrapper<std::string> MsgCont;
     MsgCont msgCont;
-    void logString(const std::string& );
 
     boost::mutex portMtx;
 
