@@ -44,9 +44,9 @@ void SerialPort::initSerial() {
     }
 
     COMMTIMEOUTS timeout = { 0 };
-    timeout.ReadIntervalTimeout = 50;
-    timeout.ReadTotalTimeoutConstant = 50;
-    timeout.ReadTotalTimeoutMultiplier = 50;
+    timeout.ReadIntervalTimeout = MAXDWORD ;
+    timeout.ReadTotalTimeoutConstant = 10000;
+    timeout.ReadTotalTimeoutMultiplier = MAXDWORD ;
     timeout.WriteTotalTimeoutConstant = 50;
     timeout.WriteTotalTimeoutMultiplier = 10;
 
@@ -83,7 +83,7 @@ void SerialPort::send(const std::string& cmd) {
         //TODO: Handle properly
         std::cout << "ERR Send" << std::endl << "\t" << lastErrBuff << std::endl;
     }
-
+    std::cout << receive() << std::endl;
 }
 
 const std::string& SerialPort::receive() {
