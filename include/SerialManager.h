@@ -4,6 +4,7 @@
 #include <queue>
 #include <string>
 #include <boost/thread/mutex.hpp>
+#include "QueueWrapper.hpp"
 
 class SerialManager {
 public:
@@ -13,8 +14,8 @@ public:
 
 private:
     SerialPort port;
-    typedef std::queue<std::string> MsgCont;
-    MsgCont *msgCont;
+    typedef QueueWrapper<std::string> MsgCont;
+    MsgCont msgCont;
     void logString(const std::string& );
 
     boost::mutex portMtx;

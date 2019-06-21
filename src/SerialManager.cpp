@@ -6,7 +6,7 @@
 #include <string>
 
 
-SerialManager::SerialManager(const std::string& name, const long& baud) : msgCont(new MsgCont) {
+SerialManager::SerialManager(const std::string& name, const long& baud) {
 
     DCB params = {};
     
@@ -39,7 +39,7 @@ void SerialManager::readPort() {
 
     portMtx.lock();
 
-    msgCont->push(port.receive());  //TODO: thread safe?
+    msgCont.push(port.receive());  //TODO: thread safe?
 
     portMtx.unlock();
 }
