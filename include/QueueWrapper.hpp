@@ -15,8 +15,7 @@ public:
 
     QueueWrapper() : container(new std::queue<T>) {}
 
-    typedef Container ContType;
-    typedef typename T value_type;
+    typedef T value_type;
 
     bool popTo(value_type& dest) {
         mtx.lock();
