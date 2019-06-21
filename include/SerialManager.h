@@ -29,7 +29,7 @@ public:
     SerialManager(const std::string& name, const SerialOptions& options);
 
     void closePort();
-    bool isOpen();
+    bool isOpen() {return open; }
 
     void readPort();
 
