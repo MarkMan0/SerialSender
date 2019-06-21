@@ -34,6 +34,9 @@
         "utility": "cpp",
         "map": "cpp",
         "deque": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "thread": "cpp",
+        "string": "cpp",
+        "mutex": "cpp"
     }
 }

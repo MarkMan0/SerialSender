@@ -3,11 +3,12 @@
       {
         "type": "shell",
         "label": "build project",
-        "command": "C:\\MinGW\\bin\\g++.exe",
+        "command": "C:\\mingw\\bin\\g++.exe",
         "args": [
           "-g",
           "-O0",
           "-I${workspaceFolder}\\include",
+          "-isystemC:\\boost_1_70_0",
           //"${workspaceFolder}\\src\\main.cpp",
           //"${workspaceFolder}\\src\\CommandHandler.cpp",
           "${workspaceFolder}\\src\\*.cpp",

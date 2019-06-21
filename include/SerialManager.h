@@ -3,6 +3,7 @@
 #include <SerialPort.h>
 #include <queue>
 #include <string>
+#include <boost/thread/mutex.hpp>
 
 class SerialManager {
 public:
@@ -16,6 +17,10 @@ private:
     MsgCont *msgCont;
     void logString(const std::string& );
 
+    boost::mutex portMtx;
+
+    bool open = false;
+
 public:
     SerialManager(const SerialManager&) = delete;       //no copy
     SerialManager& operator=(const SerialManager& ) = delete;   //no assign
@@ -25,6 +30,8 @@ public:
 
     void closePort();
     bool isOpen();
+
+    void readPort();
 
     void writeMsg(const std::string& );
 
