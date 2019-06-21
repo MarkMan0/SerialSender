@@ -17,8 +17,12 @@ private:
     void logString(const std::string& );
 
 public:
-    void openPort(const std::string& name, const long& baud);
-    void openPort(const std::string& name, const SerialOptions& options);
+
+    SerialManager(const SerialManager&) = delete;       //no copy
+    SerialManager& operator=(const SerialManager& ) = delete;   //no assign
+
+    SerialManager(const std::string& name, const long& baud);
+    SerialManager(const std::string& name, const SerialOptions& options);
 
     void closePort();
     bool isOpen();
