@@ -48,3 +48,10 @@ void SerialManager::readPort() {
 void SerialManager::closePort() {
     port.close();
 }
+
+
+std::string SerialManager::lastMsg() {
+    std::string tmp;
+    msgCont.popTo(tmp);
+    return tmp;
+}

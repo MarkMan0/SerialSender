@@ -33,6 +33,8 @@ public:
 
     void readPort();
 
+    std::string lastMsg();
+
     void writeMsg(const std::string& );
 
     void startPeriodicRead();
