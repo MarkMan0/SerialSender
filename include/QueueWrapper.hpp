@@ -2,15 +2,19 @@
 
 #include <boost/thread/mutex.hpp>
 #include <queue>
+#include <memory>
 
 template<class T>
 class QueueWrapper {
 
 private:
     boost::mutex mtx;
-    std::queue<T> *container;
+    std::unique_ptr<std::queue<T> > container;
 
 public:
+
+    QueueWrapper() : container(new std::queue<T>) {}
+
     typedef Container ContType;
     typedef typename T value_type;
 
