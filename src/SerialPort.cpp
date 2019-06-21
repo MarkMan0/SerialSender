@@ -4,53 +4,39 @@
 #include <iostream>
 #include <string>
 
-
-
-SerialPort::SerialPort() {
-    //TODO: make baud&port choosable
-
-    //create serial handle
-    initSerial();
-    buff = new char[buffSz];
-
-
-
-}
-
 SerialPort::~SerialPort() {
     closeSerial();
     delete[] buff;
 }
 
+SerialPort::SerialPort() {
+}
 
-void SerialPort::initSerial() {
-    hSerial = CreateFile("\\\\.\\COM6", GENERIC_READ | GENERIC_WRITE, 
+
+void SerialPort::open(const std::string& name, DCB paramsArg, COMMTIMEOUTS timeouts) {
+
+    //VS Code shows error, but it compiles without warnings
+    hSerial = CreateFile( name.c_str(), GENERIC_READ | GENERIC_WRITE, 
                                     0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
     DCB serialParams = { 0 };
     serialParams.DCBlength = sizeof(serialParams);
     GetCommState(hSerial, &serialParams);
 
-    serialParams.BaudRate = 250000;
-    serialParams.ByteSize = 8;
-    serialParams.StopBits = ONESTOPBIT;
-    serialParams.Parity = NOPARITY;
-    serialParams.fOutxDsrFlow = TRUE;
-    serialParams.fRtsControl = RTS_CONTROL_ENABLE;
+    //TODO:: this is rly bad
+    serialParams.BaudRate = paramsArg.BaudRate;
+    serialParams.ByteSize = paramsArg.ByteSize;
+    serialParams.StopBits = paramsArg.StopBits;
+    serialParams.Parity = paramsArg.Parity;
+    serialParams.fOutxDsrFlow = paramsArg.fOutxDsrFlow;
+    serialParams.fRtsControl = paramsArg.fRtsControl;
 
     if(!SetCommState(hSerial, &serialParams)) {
         //TODO: exceptions...
         std::cout << "Error setting state" << std::endl;
     }
 
-    COMMTIMEOUTS timeout = { 0 };
-    timeout.ReadIntervalTimeout = MAXDWORD ;
-    timeout.ReadTotalTimeoutConstant = 10000;
-    timeout.ReadTotalTimeoutMultiplier = MAXDWORD ;
-    timeout.WriteTotalTimeoutConstant = 50;
-    timeout.WriteTotalTimeoutMultiplier = 10;
-
-    if(!SetCommTimeouts(hSerial, &timeout)) {
+    if(!SetCommTimeouts(hSerial, &timeouts)) {
         std::cout << "ERR setting timeouts" << std::endl; 
     }
 }
@@ -66,7 +52,7 @@ void SerialPort::readErr() {
                 NULL,
                 GetLastError(),
                 MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                lastErrBuff,
+                lastErrBuff,        //compiles w/o warning
                 errBuffSz,
                 NULL);
 }

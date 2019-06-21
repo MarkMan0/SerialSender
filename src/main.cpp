@@ -16,9 +16,6 @@ int main()
     using namespace std;
     
     CommandHandler handler;
-    SerialPort port;
-
-    handler.registerCommand(new Commands::SendCmd(&port));
     handler.run();
 
     cout << "END" << endl;

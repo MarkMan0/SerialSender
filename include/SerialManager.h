@@ -17,7 +17,6 @@ private:
     void logString(const std::string& );
 
 public:
-
     SerialManager(const SerialManager&) = delete;       //no copy
     SerialManager& operator=(const SerialManager& ) = delete;   //no assign
 

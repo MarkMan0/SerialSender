@@ -19,6 +19,9 @@ private:
 
 public:
     SerialPort();
+
+    void open(const std::string&, DCB, COMMTIMEOUTS);
+
     ~SerialPort();
 
     void send(const std::string& cmd);
