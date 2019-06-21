@@ -55,3 +55,13 @@ std::string SerialManager::lastMsg() {
     msgCont.popTo(tmp);
     return tmp;
 }
+
+
+void SerialManager::writeMsg(const std::string& msg) {
+    if(!isOpen()) return;
+    portMtx.lock();
+
+    port.send(msg);
+
+    portMtx.unlock();
+}

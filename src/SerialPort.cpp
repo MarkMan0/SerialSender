@@ -10,6 +10,7 @@ SerialPort::~SerialPort() {
 }
 
 SerialPort::SerialPort() {
+    buff = new char[buffSz];
 }
 
 
@@ -63,25 +64,25 @@ void SerialPort::send(const std::string& cmd) {
     std::string msg = cmd + "\r";
     
     DWORD bytesSent = 0;
-    memset(buff, '\0', buffSz);
     if(!WriteFile(hSerial, msg.c_str(), msg.size(), &bytesSent, NULL)) {
         readErr();
         //TODO: Handle properly
         std::cout << "ERR Send" << std::endl << "\t" << lastErrBuff << std::endl;
     }
-    std::cout << receive() << std::endl;
 }
 
 const std::string& SerialPort::receive() {
     DWORD bytesRead = 0;
-    //get response
-    if(!ReadFile(hSerial, buff, buffSz, &bytesRead, NULL)){
-        //error occurred. Report to user.
-        readErr();
-        std::cout << "ERR read" << std::endl << "\t" << lastErrBuff << std::endl;
-    }
     response.clear();
-    response = buff;
+    //get response
+    memset(buff, '\0', buffSz);
+    while(ReadFile(hSerial, buff, buffSz, &bytesRead, NULL)){
+        //error occurred. Report to user.
+        if(buff[0] == '\0') break;
+        response += buff;
+        memset(buff, '\0', buffSz);
+    }
+    
     return response;
 }
 
