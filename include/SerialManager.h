@@ -4,6 +4,7 @@
 #include <queue>
 #include <string>
 #include <boost/thread/mutex.hpp>
+#include <thread>
 #include "QueueWrapper.hpp"
 
 class SerialManager {
@@ -20,6 +21,10 @@ private:
     boost::mutex portMtx;       //mutex for blocking the serial port
 
     bool open = false;      //is the port open?
+
+    void readThread(unsigned long);
+
+    std::thread t;
 
 public:
     SerialManager(const SerialManager&) = delete;       //no copy
@@ -38,6 +43,6 @@ public:
 
     void writeMsg(const std::string& );     //sends a message through the port
 
-    void startPeriodicRead();           //starts a periodic reading on the port
+    void startPeriodicRead(unsigned long ms);           //starts a periodic reading on the port
 
 };

@@ -3,7 +3,8 @@
 #include <map>
 #include <memory>
 #include <string>
-
+#include <thread>
+#include <chrono>
 #include <windows.h>
 
 #include "Command.h"
@@ -13,6 +14,7 @@
 #include "commands\Exit.h"
 #include "SerialManager.h"
 #include "QueueWrapper.hpp"
+#include <limits>
 
 int main()
 { 
@@ -20,6 +22,10 @@ int main()
 
     
     std::shared_ptr<SerialManager> mng(new SerialManager("COM6", 250000));
+    mng->startPeriodicRead(5000);
+    cout << "end" << endl;
+    
+    for(unsigned long i = 0; i < ULONG_MAX; ++i ) {}
 
     CommandHandler handler;
     Command* cmd = new Commands::SendCmd(mng);
