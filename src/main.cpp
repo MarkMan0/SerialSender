@@ -19,6 +19,24 @@ int main()
 
     QueueWrapper<std::string> wrapper;
 
+    wrapper.push("first");
+    wrapper.push("second");
+    wrapper.push("third");
+
+    string dest;
+    wrapper.popTo(dest);
+
+    cout << dest << " " << wrapper.size() <<endl;
+
+    wrapper.popTo(dest);
+
+    cout << dest << wrapper.size() <<endl;
+
+    wrapper.popTo(dest);
+
+    cout << dest << wrapper.size() <<endl;
+
+    return 0;
 
     
     std::shared_ptr<SerialManager> mng(new SerialManager("COM6", 250000));

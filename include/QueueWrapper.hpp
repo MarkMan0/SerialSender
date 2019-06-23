@@ -13,16 +13,18 @@ class QueueWrapper : protected std::queue<T> {
 private:
     boost::mutex mtx;
     using base = typename std::queue<T>;
-    using v_type = typename base::value_type;
-    using ref_type =  typename base::reference;
-    using const_ref_type =  typename base::const_reference;
 
 public:
+
+    using value_type = typename base::value_type;
+    using reference =  typename base::reference;
+    using const_reference =  typename base::const_reference;
+    using size_type = typename base::size_type;
 
     QueueWrapper() {}
 
 
-    bool popTo(ref_type dest) {
+    bool popTo(reference dest) {
         mtx.lock();
         bool result = false;
         if(!base::empty()) {
@@ -35,7 +37,15 @@ public:
         return result;
     }
 
-    void push(const_ref_type val) {
+    size_type size() const {
+        return base::size();
+    }
+
+    bool empty() const {
+        return base::empty();
+    }
+
+    void push(const_reference val) {
         mtx.lock();
         base::push(val);
         mtx.unlock();
