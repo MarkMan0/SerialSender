@@ -16,13 +16,21 @@ int main()
 { 
     using namespace std;
     
-    SerialManager manager("COM6", 250000);
-    manager.writeMsg("M503\rM122");
-    manager.readPort();
-    cout << manager.lastMsg() << endl;
-    manager.closePort();
+    std::shared_ptr<SerialManager> mng(new SerialManager("COM6", 250000));
 
-    manager.~SerialManager();
+    Command* cmd = new Commands::SendCmd(mng);
+    Command* cmd2 = new Commands::SendCmd(*dynamic_cast<Commands::SendCmd*>(cmd));   
+
+    cout << mng.use_count() << endl;
+
+    delete cmd2;
+    cout << mng.use_count() << endl;
+
+    delete cmd;
+    cout << mng.use_count() << endl;
+
+    mng.reset();
+    cout << mng.use_count() << endl;
 
     cout << "END" << endl;
     system("pause");
