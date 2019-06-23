@@ -37,6 +37,17 @@ public:
         return result;
     }
 
+    bool backTo(reference dest) {
+        mtx.lock();
+        bool res = false;
+        if(!base::empty()) {
+            dest = base::back();
+            result = true;
+        }
+        mtx.unlock();
+        return result();
+    }
+
     size_type size() {
         mtx.lock();
         size_type sz;
