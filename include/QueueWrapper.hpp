@@ -37,12 +37,20 @@ public:
         return result;
     }
 
-    size_type size() const {
-        return base::size();
+    size_type size() {
+        mtx.lock();
+        size_type sz;
+        sz = base::size();
+        mtx.unlock();
+        return sz;
     }
 
-    bool empty() const {
-        return base::empty();
+    bool empty() {
+        bool val;
+        mtx.lock();
+        val = base::empty();
+        mtx.unlock();
+        return val;
     }
 
     void push(const_reference val) {
