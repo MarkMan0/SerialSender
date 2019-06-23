@@ -19,18 +19,10 @@ int main()
     std::shared_ptr<SerialManager> mng(new SerialManager("COM6", 250000));
 
     Command* cmd = new Commands::SendCmd(mng);
-    Command* cmd2 = new Commands::SendCmd(*dynamic_cast<Commands::SendCmd*>(cmd));   
 
-    cout << mng.use_count() << endl;
-
-    delete cmd2;
-    cout << mng.use_count() << endl;
-
-    delete cmd;
-    cout << mng.use_count() << endl;
-
-    mng.reset();
-    cout << mng.use_count() << endl;
+    CommandHandler handler;
+    handler.registerCommand(cmd);
+    handler.run();
 
     cout << "END" << endl;
     system("pause");

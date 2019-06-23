@@ -23,12 +23,12 @@ SerialManager::SerialManager(const std::string& name, const long& baud) {
     //1 second read timeout
     COMMTIMEOUTS timeout = { 0 };
     timeout.ReadIntervalTimeout = MAXDWORD ;
-    timeout.ReadTotalTimeoutConstant = 1000;
+    timeout.ReadTotalTimeoutConstant = 100;
     timeout.ReadTotalTimeoutMultiplier = MAXDWORD ;
     timeout.WriteTotalTimeoutConstant = 50;
     timeout.WriteTotalTimeoutMultiplier = 10;
 
-    port.open(name, params, timeout);   //open the port
+    port.open(name, baud, timeout);   //open the port
 
     open = true;    //TODO: assuming everything works
 }

@@ -10,6 +10,7 @@ Commands::SendCmd::SendCmd(const std::shared_ptr<SerialManager>& _manager) : Com
 void Commands::SendCmd::execute(const std::string& line) {
     std::string msg = line.substr(std::min(line.find_first_of(" ") + 1, line.size()));     //from the first space or nothing
     manager->writeMsg(msg);
+    manager->readPort();
     std::cout << manager->lastMsg() << std::endl;
 }
 
