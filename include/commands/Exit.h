@@ -6,6 +6,7 @@
 #include "SerialManager.h"
 #include "Command.h"
 
+namespace Commands {
 class ExitCmd : public Command {
 private:
 
@@ -18,3 +19,5 @@ public:
 
     Command* clone() const override;
 };
+
+}
