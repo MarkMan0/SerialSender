@@ -1,11 +1,11 @@
 #include "commands\Exit.h"
 
 
-void ExitCmd::execute(const std::string& cmd) {
+void Commands::ExitCmd::execute(const std::string& cmd) {
     manager->closePort();
 }
 
 
-Command* ExitCmd::clone() const {
+Command* Commands::ExitCmd::clone() const {
     return new ExitCmd(manager);
 }

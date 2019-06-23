@@ -34,10 +34,11 @@ void CommandHandler::run() {
     using namespace std;
         
     string cmd;
+    string actCmd;
     do {
         cout << "Enter cmd" << endl;
         getline(cin, cmd);      //read a line from the serial
-        string actCmd = cmd.substr(0, cmd.find_first_of(" "));  //extract the first word
+        actCmd = cmd.substr(0, cmd.find_first_of(" "));  //extract the first word
         try {
             cmdMap.at(actCmd)->execute(cmd);    //try to find&execute a command
         } catch (out_of_range e) {      //TODO:: fix the warning
@@ -45,5 +46,5 @@ void CommandHandler::run() {
             cout << "Unknown command: " << cmd << endl << e.what() << endl;
         }
 
-    } while( cmd[0] != 'C');        //character C stops the run();
+    } while( actCmd.compare("Exit"));        //character C stops the run();
 }
