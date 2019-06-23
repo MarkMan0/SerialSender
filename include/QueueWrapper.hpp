@@ -8,24 +8,26 @@
 //wraps a queue<T> for thread-safe access
 //TODO:: should we inherit?
 template<class T>
-class QueueWrapper {
+class QueueWrapper : public std::queue<T> {
 
 private:
     boost::mutex mtx;
-    std::unique_ptr<std::queue<T> > container;
+    typedef typename std::queue<T>::value_type          v_type;
+    typedef typename std::queue<T>::reference           ref_type;
+    typedef typename std::queue<T>::const_reference     const_ref_type;
+    typedef std::queue<T>               base;
 
 public:
 
-    QueueWrapper() : container(new std::queue<T>) {}
+    QueueWrapper() {}
 
-    typedef T value_type;
 
-    bool popTo(value_type& dest) {
+    bool popTo(ref_type dest) {
         mtx.lock();
         bool result = false;
-        if(!container->empty()) {
-            dest = container->front();        //copy front to tmp
-            container->pop();       //delete front
+        if(!base::empty()) {
+            dest = base::front();        //copy front to tmp
+            base::pop();       //delete front
             result = true;          //success
         }
 
@@ -33,9 +35,9 @@ public:
         return result;
     }
 
-    void push(const value_type& val) {
+    void push(const_ref_type val) {
         mtx.lock();
-        container->push(val);
+        base::push(val);
         mtx.unlock();
     }
 };
