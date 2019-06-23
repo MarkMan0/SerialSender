@@ -4,16 +4,17 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:\\boost_1_70_0"
+                "C:\\boost_1_70_0",
+                ""
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
-            "compilerPath": "C:\\MinGW\\bin\\g++.exe",
+            "compilerPath": "C:\\MinGW64\\bin\\g++.exe",
             "cStandard": "c11",
-            "cppStandard": "c++17",
+            "cppStandard": "c++11",
             "intelliSenseMode": "gcc-x64"
         }
     ],
