@@ -19,7 +19,7 @@ private:
 public:
     SerialPort();
 
-    void open(const std::string&, DCB, COMMTIMEOUTS);
+    void open(const std::string&, unsigned long, COMMTIMEOUTS);
     void close();
 
     ~SerialPort();

@@ -14,7 +14,7 @@ SerialPort::SerialPort() {
 }
 
 
-void SerialPort::open(const std::string& name, DCB paramsArg, COMMTIMEOUTS timeouts) {
+void SerialPort::open(const std::string& name, unsigned long baudRate, COMMTIMEOUTS timeouts) {
 
     //VS Code shows error, but it compiles without warnings
     hSerial = CreateFile( name.c_str(), GENERIC_READ | GENERIC_WRITE, 
@@ -25,17 +25,41 @@ void SerialPort::open(const std::string& name, DCB paramsArg, COMMTIMEOUTS timeo
     GetCommState(hSerial, &serialParams);
 
     //TODO:: this is rly bad
-    serialParams.BaudRate = paramsArg.BaudRate;
-    serialParams.ByteSize = paramsArg.ByteSize;
-    serialParams.StopBits = paramsArg.StopBits;
-    serialParams.Parity = paramsArg.Parity;
-    serialParams.fOutxDsrFlow = paramsArg.fOutxDsrFlow;
-    serialParams.fRtsControl = paramsArg.fRtsControl;
+    serialParams.BaudRate = baudRate;
+
+    //from pronterface
+    serialParams.fBinary = 1;
+    serialParams.fParity = 0;
+    serialParams.fOutxCtsFlow = 0;
+    serialParams.fOutxDsrFlow = 0;
+    serialParams.fDtrControl = 1;
+    serialParams.fDsrSensitivity = 0;
+    serialParams.fTXContinueOnXoff = 0;
+    serialParams.fOutX = 0;
+    serialParams.fInX = 0;
+    serialParams.fErrorChar = 0;
+    serialParams.fNull = 0;
+    serialParams.fRtsControl = 1;
+    serialParams.fAbortOnError = 0;
+    //serialParams.fDummy2 = 0;
+    serialParams.XonLim = 0;
+    serialParams.XoffLim = 0;
+    serialParams.ByteSize = 8;
+    serialParams.Parity = 0;
+    serialParams.StopBits = 0;
+    serialParams.XonChar = 87;
+    serialParams.XoffChar = 100;
+    serialParams.ErrorChar = -3;
+    serialParams.EofChar = -96;
+    serialParams.EvtChar = 0;
 
     if(!SetCommState(hSerial, &serialParams)) {
         //TODO: exceptions...
         std::cout << "Error setting state" << std::endl;
     }
+
+    COMMTIMEOUTS curr = {0};
+    GetCommTimeouts(hSerial, &curr);
 
     if(!SetCommTimeouts(hSerial, &timeouts)) {
         std::cout << "ERR setting timeouts" << std::endl; 
@@ -78,7 +102,7 @@ const std::string& SerialPort::receive() {
     memset(buff, '\0', buffSz);
     while(ReadFile(hSerial, buff, buffSz, &bytesRead, NULL)){
         //error occurred. Report to user.
-        if(buff[0] == '\0') break;
+        if(bytesRead == 0) break;
         response += buff;
         memset(buff, '\0', buffSz);
     }
