@@ -8,7 +8,7 @@
 //wraps a queue<T> for thread-safe access
 //TODO:: should we inherit?
 template<class T>
-class QueueWrapper : public std::queue<T> {
+class QueueWrapper : protected std::queue<T> {
 
 private:
     boost::mutex mtx;
