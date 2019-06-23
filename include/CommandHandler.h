@@ -12,14 +12,14 @@ private:
     /* data */
     typedef std::map< std::string, std::unique_ptr<Command> > cmdContainer;
 
-    cmdContainer cmdMap;
+    cmdContainer cmdMap;        //<string, *cmd> map, where first is the name, second is the command
 public:
     CommandHandler(/* args */) {}
     CommandHandler(const CommandHandler& );
     ~CommandHandler() { }
-    void registerCommand(Command*);
-    void deleteCommand(const std::string& name);
+    void registerCommand(Command*);     //puts a command into the map
+    void deleteCommand(const std::string& name);    //removes a command from the map
 
-    void run();
+    void run();     //starts listening for commands
 
 };

@@ -8,19 +8,7 @@
 
 SerialManager::SerialManager(const std::string& name, const long& baud) {
 
-    DCB params = {};
-    
-    params.BaudRate = baud;
-
-    //generic for 3d printers
-    params.ByteSize = 8;
-    params.StopBits = ONESTOPBIT;
-    params.Parity = NOPARITY;
-    params.fOutxDsrFlow = TRUE;
-    params.fRtsControl = RTS_CONTROL_ENABLE;
-
-
-    //1 second read timeout
+    //defines how much to wait for a message
     COMMTIMEOUTS timeout = { 0 };
     timeout.ReadIntervalTimeout = MAXDWORD ;
     timeout.ReadTotalTimeoutConstant = 100;
@@ -35,13 +23,13 @@ SerialManager::SerialManager(const std::string& name, const long& baud) {
 
 
 void SerialManager::readPort() {
-    if(!isOpen()) return;
+    if(!isOpen()) return;       //port no open, nothing to do
 
     portMtx.lock(); //TODO:: called periodically, need to wait???
 
-    msgCont.push(port.receive());  //TODO: thread safe?
+    msgCont.push(port.receive());  //read a message and push to the queue
 
-    portMtx.unlock();
+    portMtx.unlock();       //unclock the mutex
 }
 
 
@@ -52,11 +40,11 @@ void SerialManager::closePort() {
 
 std::string SerialManager::lastMsg() {
     std::string tmp;
-    msgCont.popTo(tmp);
+    msgCont.popTo(tmp);     //pops and returns the next message from the queue
     return tmp;
 }
 
-
+//sends a message when the port mutex is free
 void SerialManager::writeMsg(const std::string& msg) {
     if(!isOpen()) return;
     portMtx.lock();

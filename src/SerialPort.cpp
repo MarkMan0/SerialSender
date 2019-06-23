@@ -4,16 +4,17 @@
 #include <iostream>
 #include <string>
 
+//closes the port and frees the internal buffer
 SerialPort::~SerialPort() {
     close();
     delete[] buff;
 }
 
 SerialPort::SerialPort() {
-    buff = new char[buffSz];
+    buff = new char[buffSz];    //init the buffer
 }
 
-
+//opens a serial port
 void SerialPort::open(const std::string& name, unsigned long baudRate, COMMTIMEOUTS timeouts) {
 
     //VS Code shows error, but it compiles without warnings
@@ -24,8 +25,7 @@ void SerialPort::open(const std::string& name, unsigned long baudRate, COMMTIMEO
     serialParams.DCBlength = sizeof(serialParams);
     GetCommState(hSerial, &serialParams);
 
-    //TODO:: this is rly bad
-    serialParams.BaudRate = baudRate;
+    serialParams.BaudRate = baudRate;   //set the baud rate
 
     //from pronterface
     serialParams.fBinary = 1;
@@ -41,7 +41,6 @@ void SerialPort::open(const std::string& name, unsigned long baudRate, COMMTIMEO
     serialParams.fNull = 0;
     serialParams.fRtsControl = 1;
     serialParams.fAbortOnError = 0;
-    //serialParams.fDummy2 = 0;
     serialParams.XonLim = 0;
     serialParams.XoffLim = 0;
     serialParams.ByteSize = 8;
@@ -58,9 +57,6 @@ void SerialPort::open(const std::string& name, unsigned long baudRate, COMMTIMEO
         std::cout << "Error setting state" << std::endl;
     }
 
-    COMMTIMEOUTS curr = {0};
-    GetCommTimeouts(hSerial, &curr);
-
     if(!SetCommTimeouts(hSerial, &timeouts)) {
         std::cout << "ERR setting timeouts" << std::endl; 
     }
@@ -68,10 +64,11 @@ void SerialPort::open(const std::string& name, unsigned long baudRate, COMMTIMEO
 
 
 void SerialPort::close() {
-    CloseHandle(hSerial);
+    CloseHandle(hSerial);   //closes the port
 }
 
 void SerialPort::readErr() {
+    //reads the last global error
     memset(lastErrBuff, '\0', errBuffSz);
     FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
                 NULL,
@@ -85,7 +82,7 @@ void SerialPort::readErr() {
 
 void SerialPort::send(const std::string& cmd) {
 
-    std::string msg = cmd + "\r";
+    std::string msg = cmd + "\r";   //add return character to the string
     
     DWORD bytesSent = 0;
     if(!WriteFile(hSerial, msg.c_str(), msg.size(), &bytesSent, NULL)) {
@@ -100,6 +97,7 @@ const std::string& SerialPort::receive() {
     response.clear();
     //get response
     memset(buff, '\0', buffSz);
+    //read while can
     while(ReadFile(hSerial, buff, buffSz, &bytesRead, NULL)){
         //error occurred. Report to user.
         if(bytesRead == 0) break;

@@ -4,6 +4,9 @@
 #include <queue>
 #include <memory>
 
+
+//wraps a queue<T> for thread-safe access
+//TODO:: should we inherit?
 template<class T>
 class QueueWrapper {
 
