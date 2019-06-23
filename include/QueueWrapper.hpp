@@ -12,10 +12,10 @@ class QueueWrapper : public std::queue<T> {
 
 private:
     boost::mutex mtx;
-    typedef typename std::queue<T>::value_type          v_type;
-    typedef typename std::queue<T>::reference           ref_type;
-    typedef typename std::queue<T>::const_reference     const_ref_type;
-    typedef std::queue<T>               base;
+    using base = typename std::queue<T>;
+    using v_type = typename base::value_type;
+    using ref_type =  typename base::reference;
+    using const_ref_type =  typename base::const_reference;
 
 public:
 
