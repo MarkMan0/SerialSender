@@ -15,8 +15,8 @@ namespace Commands {
 
     public:
         SendCmd(const std::shared_ptr<SerialManager>& _manager);
-        void execute(const std::string&);
-        Command* clone() const;     //not rly needed
+        void execute(const std::string&) override;
+        Command* clone() const override;     //not rly needed
     };
 
 }   
