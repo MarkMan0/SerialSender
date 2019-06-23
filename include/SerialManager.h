@@ -39,7 +39,8 @@ public:
 
     void readPort();
 
-    std::string lastMsg();      //gets the latest message
+    std::string nextMsg();      //gets the latest message
+    std::string lastMsg();
 
     void writeMsg(const std::string& );     //sends a message through the port
 

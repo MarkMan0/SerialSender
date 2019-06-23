@@ -42,10 +42,10 @@ public:
         bool res = false;
         if(!base::empty()) {
             dest = base::back();
-            result = true;
+            res = true;
         }
         mtx.unlock();
-        return result();
+        return res;
     }
 
     size_type size() {

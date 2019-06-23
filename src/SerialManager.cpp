@@ -29,8 +29,9 @@ void SerialManager::readPort() {
     if(!isOpen()) return;       //port no open, nothing to do
 
     portMtx.lock(); //TODO:: called periodically, need to wait???
-
-    msgCont.push(port.receive());  //read a message and push to the queue
+    std::string msg = port.receive();
+    if(msg.size() > 1)
+        msgCont.push(msg);  //read a message and push to the queue
 
     portMtx.unlock();       //unclock the mutex
 }
@@ -40,8 +41,13 @@ void SerialManager::closePort() {
     port.close();
 }
 
-
 std::string SerialManager::lastMsg() {
+    std::string msg;
+    msgCont.backTo(msg);
+    return msg;
+}
+
+std::string SerialManager::nextMsg() {
     std::string tmp;
     msgCont.popTo(tmp);     //pops and returns the next message from the queue
     return tmp;
@@ -59,15 +65,11 @@ void SerialManager::writeMsg(const std::string& msg) {
 
 void SerialManager::readThread(unsigned long ms) {
     while(1) {
-        std::cout << "reading..." << std::endl;
+        this->readPort();
         std::this_thread::sleep_for(std::chrono::milliseconds(ms));
     }
 }
 
-void test() {
-    std::cout << "reading..." << std::endl;
-    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-}
 
 void SerialManager::startPeriodicRead(unsigned long ms) {
     t = std::thread(&SerialManager::readThread, this, ms);
