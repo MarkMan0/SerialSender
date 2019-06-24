@@ -31,7 +31,7 @@ void SerialManager::readPort() {
     portMtx.lock(); //TODO:: called periodically, need to wait???
     std::string msg = port.receive();
     if(msg.size() > 1)
-        msgCont.push(msg);  //read a message and push to the queue
+        msgCont.push_back_mtx(msg);  //read a message and push to the queue
 
     portMtx.unlock();       //unclock the mutex
 }
@@ -43,13 +43,13 @@ void SerialManager::closePort() {
 
 std::string SerialManager::lastMsg() {
     std::string msg;
-    msgCont.backTo(msg);
+    msgCont.pop_back_to(msg);
     return msg;
 }
 
 std::string SerialManager::nextMsg() {
     std::string tmp;
-    msgCont.popTo(tmp);     //pops and returns the next message from the queue
+    msgCont.pop_front_to(tmp);     //pops and returns the next message from the queue
     return tmp;
 }
 

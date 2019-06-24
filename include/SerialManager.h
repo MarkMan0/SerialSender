@@ -15,7 +15,7 @@ public:
 
 private:
     SerialPort port;        //the underlying serial port
-    typedef QueueWrapper<std::string> MsgCont;  
+    typedef ListWrapper<std::string> MsgCont;  
     MsgCont msgCont;        //read messages go here
 
     boost::mutex portMtx;       //mutex for blocking the serial port

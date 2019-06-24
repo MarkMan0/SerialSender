@@ -1,18 +1,18 @@
 #pragma once
 
 #include <boost/thread/mutex.hpp>
-#include <queue>
+#include <list>
 #include <memory>
 
 
 //wraps a queue<T> for thread-safe access
 //TODO:: should we inherit?
 template<class T>
-class QueueWrapper : protected std::queue<T> {
+class ListWrapper : protected std::list<T> {
 
 private:
     boost::mutex mtx;
-    using base = typename std::queue<T>;
+    using base = typename std::list<T>;
 
 public:
 
@@ -21,15 +21,42 @@ public:
     using const_reference =  typename base::const_reference;
     using size_type = typename base::size_type;
 
-    QueueWrapper() {}
+    ListWrapper() {}
+
+    reference front() {
+        mtx.lock();
+        reference ref = base::front();
+        mtx.unlock();
+        return ref;
+    }
+
+    reference back() {
+        mtx.lock();
+        reference ref = base::back();
+        mtx.unlock();
+        return ref;
+    }
+
+    void push_front_mtx(const value_type& val) {
+        mtx.lock();
+        base::push_front(val);
+        mtx.unlock();
+    }
+
+    void push_back_mtx(const value_type& val) {
+        mtx.lock();
+        base::push_back(val);
+        mtx.unlock();
+    }
+    
 
 
-    bool popTo(reference dest) {
+    bool pop_front_to(reference dest) {
         mtx.lock();
         bool result = false;
         if(!base::empty()) {
             dest = base::front();        //copy front to tmp
-            base::pop();       //delete front
+            base::pop_front();       //delete front
             result = true;          //success
         }
 
@@ -37,16 +64,20 @@ public:
         return result;
     }
 
-    bool backTo(reference dest) {
+    bool pop_back_to(reference dest) {
         mtx.lock();
-        bool res = false;
+        bool result = false;
         if(!base::empty()) {
-            dest = base::back();
-            res = true;
+            dest = base::back();        //copy front to tmp
+            base::pop_back();       //delete front
+            result = true;          //success
         }
+
         mtx.unlock();
-        return res;
+        return result;
     }
+    
+
 
     size_type size() {
         mtx.lock();
@@ -64,9 +95,9 @@ public:
         return val;
     }
 
-    void push(const_reference val) {
+    void push_back(const_reference val) {
         mtx.lock();
-        base::push(val);
+        base::push_back(val);
         mtx.unlock();
     }
 };
