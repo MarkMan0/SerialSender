@@ -20,7 +20,9 @@ void Commands::SendCmd::execute(const std::string& line) {
     
     while( resp.find("ok") == std::string::npos && resp.find("halted") == std::string::npos ) {
         manager->readPort();
-        resp += manager->nextMsg();
+        if(resp.size() > 1)
+            std::cout << resp << std::endl;
+        resp = manager->nextMsg();
     }
     
     std::cout << resp << std::endl;   //prints the response to CMD
