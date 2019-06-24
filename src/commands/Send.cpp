@@ -16,7 +16,14 @@ void Commands::SendCmd::execute(const std::string& line) {
     
     manager->writeMsg(msg);     //sends a message
     manager->readPort();        //reads the response
-    std::cout << manager->nextMsg() << std::endl;   //prints the response to CMD
+    std::string resp = manager->nextMsg();
+    
+    while( resp.find("ok") == std::string::npos && resp.find("halted") == std::string::npos ) {
+        manager->readPort();
+        resp += manager->nextMsg();
+    }
+    
+    std::cout << resp << std::endl;   //prints the response to CMD
 }
 
 //not needed
