@@ -12,9 +12,14 @@
           "-isystemC:\\boost_1_70_0",
           //"${workspaceFolder}\\src\\main.cpp",
           //"${workspaceFolder}\\src\\CommandHandler.cpp",
-          "${workspaceFolder}\\src\\*.cpp",
-          "${workspaceFolder}\\src\\commands\\*.cpp",
+          
           "-Wall",
+        "${workspaceFolder}\\src\\CommandHandler.cpp",
+        "${workspaceFolder}\\src\\main.cpp",
+        "${workspaceFolder}\\src\\SerialManager.cpp",
+        "${workspaceFolder}\\src\\SerialPort.cpp",
+        "${workspaceFolder}\\src\\commands\\Exit.cpp",
+        "${workspaceFolder}\\src\\commands\\Send.cpp",
           "-o",
           "${workspaceFolder}\\bin\\main.exe"
         ],
