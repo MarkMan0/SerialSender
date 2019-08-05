@@ -53,6 +53,7 @@
         "list": "cpp",
         "typeindex": "cpp",
         "variant": "cpp",
-        "numeric": "cpp"
+        "numeric": "cpp",
+        "algorithm": "cpp"
     }
 }
