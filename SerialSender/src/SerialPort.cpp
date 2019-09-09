@@ -91,22 +91,3 @@ void SerialPort::send(const std::string& cmd) {
     }
 }
 
-const std::string& SerialPort::receive() {
-    DWORD bytesRead = 0;
-    response.clear();
-    //get response
-    memset(buff, '\0', buffSz);
-    //read while can
-    while(ReadFile(hSerial, buff, buffSz, &bytesRead, NULL)){
-        //error occurred. Report to user.
-        if(bytesRead == 0) break;
-        response += buff;
-        memset(buff, '\0', buffSz);
-    }
-    
-    return response;
-}
-
-const std::string& SerialPort::lastResponse() const {
-    return response;
-}
