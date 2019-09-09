@@ -32,24 +32,24 @@ void SerialPort::open(const std::string& name, unsigned long baudRate, COMMTIMEO
     serialParams.fParity = 0;
     serialParams.fOutxCtsFlow = 0;
     serialParams.fOutxDsrFlow = 0;
-    serialParams.fDtrControl = 1;
+    serialParams.fDtrControl = DTR_CONTROL_DISABLE;
     serialParams.fDsrSensitivity = 0;
     serialParams.fTXContinueOnXoff = 0;
     serialParams.fOutX = 0;
     serialParams.fInX = 0;
     serialParams.fErrorChar = 0;
     serialParams.fNull = 0;
-    serialParams.fRtsControl = 1;
+    serialParams.fRtsControl = RTS_CONTROL_DISABLE;
     serialParams.fAbortOnError = 0;
     serialParams.XonLim = 0;
     serialParams.XoffLim = 0;
     serialParams.ByteSize = 8;
     serialParams.Parity = 0;
-    serialParams.StopBits = 0;
-    serialParams.XonChar = 87;
-    serialParams.XoffChar = 100;
-    serialParams.ErrorChar = -3;
-    serialParams.EofChar = -96;
+    serialParams.StopBits = ONESTOPBIT;
+    serialParams.XonChar = 0;
+    serialParams.XoffChar = 0;
+    serialParams.ErrorChar = 253;
+    serialParams.EofChar = 160;
     serialParams.EvtChar = 0;
 
     if(!SetCommState(hSerial, &serialParams)) {
