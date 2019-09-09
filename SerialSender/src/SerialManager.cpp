@@ -14,10 +14,10 @@ SerialManager::SerialManager(const std::string& name, const long& baud) {
     //defines how much to wait for a message
     COMMTIMEOUTS timeout = { 0 };
     timeout.ReadIntervalTimeout = MAXDWORD ;
-    timeout.ReadTotalTimeoutConstant = 100;
-    timeout.ReadTotalTimeoutMultiplier = MAXDWORD ;
-    timeout.WriteTotalTimeoutConstant = 50;
-    timeout.WriteTotalTimeoutMultiplier = 10;
+    timeout.ReadTotalTimeoutConstant = 0;
+    timeout.ReadTotalTimeoutMultiplier = 0 ;
+    timeout.WriteTotalTimeoutConstant = 0;
+    timeout.WriteTotalTimeoutMultiplier = 0;
 
     port.open(name, baud, timeout);   //open the port
 
