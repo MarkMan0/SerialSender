@@ -64,10 +64,31 @@ void SerialManager::writeMsg(const std::string& msg) {
 }
 
 void SerialManager::readThread(unsigned long ms) {
-    while(1) {
-        this->readPort();
-        std::this_thread::sleep_for(std::chrono::milliseconds(ms));
-    }
+
+	DWORD dwCommEvent;
+	DWORD dwRead;
+	char  chRead;
+
+
+	while(1) {
+		if (WaitCommEvent(port.hSerial, &dwCommEvent, NULL)) {
+			//receive char event occoured
+			do {
+				if (ReadFile(port.hSerial, &chRead, 1, &dwRead, NULL)) {
+					// A byte has been read; process it.
+				}
+				else {
+					// An error occurred in the ReadFile call.
+					break;
+				}
+			} while (dwRead);	//while the bytes read is greater than 0, read
+		}
+		else {
+			// Error in WaitCommEvent
+			break;
+		}
+	}
+
 }
 
 

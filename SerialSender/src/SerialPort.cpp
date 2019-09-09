@@ -59,6 +59,8 @@ void SerialPort::open(const std::string& name, unsigned long baudRate, COMMTIMEO
     if(!SetCommTimeouts(hSerial, &timeouts)) {
         std::cout << "ERR setting timeouts" << std::endl; 
     }
+
+	SetCommMask(hSerial, EV_RXCHAR);	//trigger event on every char receive
 }
 
 
