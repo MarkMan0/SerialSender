@@ -22,7 +22,7 @@ int main()
     using namespace std;
 
     
-    std::shared_ptr<SerialManager> mng(new SerialManager("COM6", 250000));
+    std::shared_ptr<SerialManager> mng(new SerialManager("COM4", 115200));
     mng->startPeriodicRead(5000);
     cout << "end" << endl;
     
