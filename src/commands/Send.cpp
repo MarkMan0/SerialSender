@@ -17,7 +17,7 @@ void Commands::SendCmd::execute(const std::string& line) {
     manager->writeMsg(msg);     //sends a message
     manager->readPort();        //reads the response
     std::string resp = manager->nextMsg();
-    
+	return;
     while( resp.find("ok") == std::string::npos && resp.find("halted") == std::string::npos ) {
         manager->readPort();
         if(resp.size() > 1)
