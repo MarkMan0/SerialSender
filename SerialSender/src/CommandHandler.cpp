@@ -8,11 +8,9 @@
 #include "Command.h"
 
     
-void CommandHandler::registerCommand(Command* cmd) {
+void CommandHandler::registerCommand(std::unique_ptr<Command>&& cmdPtr) {
     //insert a command to the map
-    if(!cmdMap.insert(std::make_pair(cmd->getName(), std::unique_ptr<Command>(cmd))).second) {
-        //TODO:: throw some exception
-    }
+	cmdMap[cmdPtr->getName()] = std::move(cmdPtr);
 }
 
 CommandHandler::CommandHandler(const CommandHandler& old) {

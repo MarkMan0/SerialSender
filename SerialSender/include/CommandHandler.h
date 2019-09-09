@@ -17,7 +17,7 @@ public:
     CommandHandler(/* args */) {}
     CommandHandler(const CommandHandler& );
     ~CommandHandler() { }
-    void registerCommand(Command*);     //puts a command into the map
+    void registerCommand(std::unique_ptr<Command>&& cmdPtr);     //puts a command into the map
     void deleteCommand(const std::string& name);    //removes a command from the map
 
     void run();     //starts listening for commands

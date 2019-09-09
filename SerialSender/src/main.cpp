@@ -28,14 +28,12 @@ int main()
     
 
     CommandHandler handler;
-    Command* cmd = new Commands::SendCmd(mng);
-    handler.registerCommand(cmd);
 
-    cmd = new Commands::ExitCmd(mng);
-    handler.registerCommand(cmd);
+    handler.registerCommand(std::make_unique<Commands::SendCmd>(mng));
 
-    cmd = new Commands::AllMsgCmd(mng);
-    handler.registerCommand(cmd);
+    handler.registerCommand(std::make_unique<Commands::ExitCmd>(mng));
+
+    handler.registerCommand(std::make_unique<Commands::AllMsgCmd>(mng));
 
     handler.run();
 
