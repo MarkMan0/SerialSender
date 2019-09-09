@@ -12,7 +12,7 @@ Commands::SendCmd::SendCmd(const std::shared_ptr<SerialManager>& _manager) : Com
 void Commands::SendCmd::execute(const std::string& line) {
     //command is like: Send ...
     //this removes the Send part
-    std::string msg = line.substr(std::min(line.find_first_of(" ") + 1, line.size()));
+    std::string msg = line.substr((std::min)(line.find_first_of(" ") + 1, line.size()));
     
     manager->writeMsg(msg);     //sends a message
     manager->readPort();        //reads the response
