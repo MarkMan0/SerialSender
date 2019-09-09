@@ -15,7 +15,6 @@ namespace Commands {
     public:
         AllMsgCmd(const std::shared_ptr<SerialManager> _manager) : Command("AllMsg"), manager(_manager) {}
 
-        Command* clone() const override {return nullptr;}
         void execute(const std::string& cmd) override {
             std::string str;
             while((str = manager->nextMsg()).size() > 1) {

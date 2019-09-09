@@ -27,8 +27,3 @@ void Commands::SendCmd::execute(const std::string& line) {
     
     std::cout << resp << std::endl;   //prints the response to CMD
 }
-
-//not needed
-Command* Commands::SendCmd::clone() const {
-    return new SendCmd(manager);       
-}

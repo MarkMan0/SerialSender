@@ -17,7 +17,6 @@ public:
 
     void execute(const std::string&) override;
 
-    Command* clone() const override;
 };
 
 }

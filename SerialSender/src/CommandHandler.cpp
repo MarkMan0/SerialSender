@@ -13,12 +13,6 @@ void CommandHandler::registerCommand(std::unique_ptr<Command>&& cmdPtr) {
 	cmdMap[cmdPtr->getName()] = std::move(cmdPtr);
 }
 
-CommandHandler::CommandHandler(const CommandHandler& old) {
-    //creates a copy of the map
-    for(const auto& it : old.cmdMap) {
-        this->cmdMap.insert(std::make_pair(it.first, std::unique_ptr<Command>(it.second->clone())));
-    }
-}
 
 //deletes a command from the map
 void CommandHandler::deleteCommand(const std::string& name) {
