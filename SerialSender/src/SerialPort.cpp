@@ -18,7 +18,7 @@ void SerialPort::open(const std::string& name, unsigned long baudRate, COMMTIMEO
 
     //VS Code shows error, but it compiles without warnings
     hSerial = CreateFile( name.c_str(), GENERIC_READ | GENERIC_WRITE, 
-                                    0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+                                    0, 0, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, 0);
 
     DCB serialParams = { 0 };
     serialParams.DCBlength = sizeof(serialParams);
