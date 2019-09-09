@@ -5,6 +5,8 @@
 
 //class to handle the port
 class SerialPort {
+	friend class SerialManager;		//sometimes manipulates the port directly
+
 private:
     HANDLE hSerial;       //port reference  
     const size_t buffSz = 50000;    //buffer size for incoming messages
