@@ -10,8 +10,7 @@ SerialPort::~SerialPort() {
     delete[] buff;
 }
 
-SerialPort::SerialPort() {
-    buff = new char[buffSz];    //init the buffer
+SerialPort::SerialPort() : hSerial(0), buff(new char[buffSz]) {
 }
 
 //opens a serial port
