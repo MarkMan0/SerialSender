@@ -3,3 +3,8 @@
 .vscode/ipch/*
 .vscode/ipch/
 bin/
+.vs
+.vs/*
+.vs/
+Debug
+Debug/
