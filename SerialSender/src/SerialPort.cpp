@@ -82,14 +82,54 @@ void SerialPort::readErr() {
 
 
 void SerialPort::send(const std::string& cmd) {
+	
+	OVERLAPPED osWrite = { 0 };
+	DWORD dwWritten;
+	DWORD dwRes;
+	BOOL fRes;
 
     std::string msg = cmd + "\r";   //add return character to the string
-    
-    DWORD bytesSent = 0;
-    if(!WriteFile(hSerial, msg.c_str(), msg.size(), &bytesSent, NULL)) {
-        readErr();
-        //TODO: Handle properly
-        std::cout << "ERR Send" << std::endl << "\t" << lastErrBuff << std::endl;
-    }
+	osWrite.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+
+
+	if (!WriteFile(hSerial, msg.c_str(), msg.size(), &dwWritten, &osWrite)) {
+		if (GetLastError() != ERROR_IO_PENDING) {
+			// WriteFile failed, but isn't delayed. Report error and abort.
+			fRes = FALSE;
+			std::cout << "Send fail" << std::endl;
+		}
+		else {
+			// Write is pending.
+			dwRes = WaitForSingleObject(osWrite.hEvent, INFINITE);
+		}
+		switch (dwRes) {
+			// OVERLAPPED structure's event has been signaled. 
+		case WAIT_OBJECT_0:
+			if (!GetOverlappedResult(hSerial, &osWrite, &dwWritten, FALSE)) {
+				fRes = FALSE;
+				std::cout << "Send fail" << std::endl;
+			}
+			else {
+				// Write operation completed successfully.
+				fRes = TRUE;
+				std::cout << "Send success" << std::endl;
+			}
+				
+			break;
+
+		default:
+			// An error has occurred in WaitForSingleObject.
+			// This usually indicates a problem with the
+		   // OVERLAPPED structure's event handle.
+			fRes = FALSE;
+			break;
+		}
+	}
+	else {
+		// WriteFile completed immediately.
+		fRes = TRUE;
+	}
+
+	CloseHandle(osWrite.hEvent);
 }
 
