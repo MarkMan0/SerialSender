@@ -81,7 +81,7 @@ void SerialManager::readThread(unsigned long ms) {
 			do {
 				//begin overlapped reading
 				//returns TRUE if reading done immediately, false if error OR waiting
-				if (!ReadFile(port.hSerial, port.buff, port.buffSz, &dwRead, &osReader)) {
+				if (!ReadFile(port.hSerial, &chRead, 1, &dwRead, &osReader)) {
 					if (GetLastError() != ERROR_IO_PENDING) {   // read not delayed?
 						//Error occoured
 						//break;
@@ -94,7 +94,7 @@ void SerialManager::readThread(unsigned long ms) {
 				else {
 					// read completed immediately
 					fWaitingOnRead = FALSE;
-					std::cout << port.buff;
+					std::cout << chRead;
 				}
 				DWORD dwRes;	//the result of the wait
 
@@ -109,7 +109,7 @@ void SerialManager::readThread(unsigned long ms) {
 						}
 						else {
 							// Read completed successfully.
-							std::cout << port.buff;
+							std::cout << chRead;
 						}
 
 						//  Reset flag so that another opertion can be issued.
