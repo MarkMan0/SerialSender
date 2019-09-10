@@ -29,7 +29,7 @@ void SerialManager::readPort() {
     if(!isOpen()) return;       //port no open, nothing to do
 
     portMtx.lock(); //TODO:: called periodically, need to wait???
-    std::string msg = port.receive();
+    std::string msg = "";
     if(msg.size() > 1)
         msgCont.push_back_mtx(msg);  //read a message and push to the queue
 
@@ -66,8 +66,9 @@ void SerialManager::writeMsg(const std::string& msg) {
 void SerialManager::readThread(unsigned long ms) {
 
 	DWORD dwCommEvent;
-	DWORD dwRead;
 	char  chRead;
+
+	DWORD dwRead;
 
 
 	while(1) {
@@ -76,6 +77,7 @@ void SerialManager::readThread(unsigned long ms) {
 			do {
 				if (ReadFile(port.hSerial, &chRead, 1, &dwRead, NULL)) {
 					// A byte has been read; process it.
+					std::cout << chRead;
 				}
 				else {
 					// An error occurred in the ReadFile call.
