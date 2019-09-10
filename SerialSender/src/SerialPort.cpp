@@ -84,13 +84,15 @@ void SerialPort::readErr() {
 void SerialPort::send(const std::string& cmd) {
 	
 	OVERLAPPED osWrite = { 0 };
-	DWORD dwWritten;
-	DWORD dwRes;
-	BOOL fRes;
+	DWORD dwWritten = 0;
+	DWORD dwRes = 0;
+	BOOL fRes = 0;
 
     std::string msg = cmd + "\r";   //add return character to the string
 	osWrite.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-
+	if (osWrite.hEvent == NULL) {
+		return;
+	}
 
 	if (!WriteFile(hSerial, msg.c_str(), msg.size(), &dwWritten, &osWrite)) {
 		if (GetLastError() != ERROR_IO_PENDING) {

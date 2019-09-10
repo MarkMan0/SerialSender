@@ -65,17 +65,23 @@ void SerialManager::writeMsg(const std::string& msg) {
 
 void SerialManager::readThread(unsigned long ms) {
 
-	DWORD dwCommEvent;
-	DWORD dwRead;
-	char  chRead;
+	DWORD dwCommEvent = 0;
+	DWORD dwRead = 0;
+	char  chRead = 0;
 
 
 	OVERLAPPED osReader = { 0 };
 	BOOL fWaitingOnRead = FALSE;
 	osReader.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+	if (osReader.hEvent == NULL) {
+		return;
+	}
+
+
 
 	while (1) {
 		if (WaitCommEvent(port.hSerial, &dwCommEvent, NULL)) {
+			fWaitingOnRead = FALSE;
 			//receive char event occoured
 			//reead all the available bytes
 			do {
