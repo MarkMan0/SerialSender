@@ -61,11 +61,15 @@ void SerialPort::open(const std::string& name, unsigned long baudRate, COMMTIMEO
     }
 
 	SetCommMask(hSerial, EV_RXCHAR);	//trigger event on every char receive
+	isOpen = true;
 }
 
 
 void SerialPort::close() {
-    CloseHandle(hSerial);   //closes the port
+	if (isOpen) {
+		CloseHandle(hSerial);   //closes the port
+		isOpen = false;
+	}
 }
 
 void SerialPort::readErr() {

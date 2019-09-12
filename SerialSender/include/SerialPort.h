@@ -22,6 +22,10 @@ private:
 	SerialPort();       //just constructs, doesn't open
 
 	void open(const std::string&, unsigned long, COMMTIMEOUTS);     //opens the port
+
+	bool isOpen;
+
+	bool open() { return isOpen; }
 	void close();       //closes the port
 
 	std::string readOnEvent();
