@@ -110,6 +110,8 @@ void SerialPort::readErr() {
 
 
 void SerialPort::send(const std::string& cmd) {
+
+	if (!isOpen) return;
 	
 	OVERLAPPED ov = { 0 };
 
@@ -259,6 +261,9 @@ inline void readAvailable(HANDLE* h, std::string& dest) {
 //on receive event, reads the port while there is data available, and then returns
 //the whole data as std::string
 std::string SerialPort::readOnEvent() {
+
+	if (!isOpen) return "";
+
 	DWORD dwCommEvent = 0;
 
 	std::string msg("");
