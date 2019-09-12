@@ -36,6 +36,10 @@ SerialPort::~SerialPort() {
 //opens a serial port
 void SerialPort::open(const std::string& name, unsigned long baudRate, COMMTIMEOUTS timeouts) {
 
+	if (isOpen) {
+		close();
+	}
+
     //VS Code shows error, but it compiles without warnings
     hSerial = CreateFile( name.c_str(), GENERIC_READ | GENERIC_WRITE, 
                                     0, 0, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, 0);
