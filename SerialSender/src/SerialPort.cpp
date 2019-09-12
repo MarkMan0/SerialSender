@@ -4,14 +4,34 @@
 #include <iostream>
 #include <string>
 
-//closes the port and frees the internal buffer
-SerialPort::~SerialPort() {
-    close();
-    delete[] buff;
+
+SerialPort::SerialPort() : hSerial(0), lastErrBuff({ 0 }) {
 }
 
-SerialPort::SerialPort() : hSerial(0), buff(new char[buffSz]) {
+SerialPort::SerialPort(SerialPort&& old) : hSerial(old.hSerial), isOpen(old.isOpen), lastErrBuff({ 0 }) {
+	old.open = false;
 }
+
+SerialPort& SerialPort::operator=(SerialPort&& old) noexcept {
+	
+	if (&old != this) {
+		close();	//close this handle
+
+		hSerial = old.hSerial;
+		isOpen = old.isOpen;
+		old.isOpen = false;	//do not close the handle on moving
+	}
+	return *this;
+
+}
+
+
+
+//closes the port 
+SerialPort::~SerialPort() {
+	close();
+}
+
 
 //opens a serial port
 void SerialPort::open(const std::string& name, unsigned long baudRate, COMMTIMEOUTS timeouts) {
