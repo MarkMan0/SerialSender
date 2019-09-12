@@ -3,7 +3,7 @@
 #include <SerialPort.h>
 #include <queue>
 #include <string>
-#include <boost/thread/mutex.hpp>
+#include <mutex>
 #include <thread>
 #include "QueueWrapper.hpp"
 
@@ -18,9 +18,7 @@ private:
     typedef ListWrapper<std::string> MsgCont;  
     MsgCont msgCont;        //read messages go here
 
-    boost::mutex portMtx;       //mutex for blocking the serial port
-
-    bool open = false;      //is the port open?
+    std::mutex portMtx;       //mutex for blocking the serial port
 
     void readThread();
 
@@ -38,7 +36,7 @@ public:
 	~SerialManager();
 
     void closePort();
-    bool isOpen() {return open; }
+    bool isOpen() {return port.open(); }
 
     void readPort();
 
