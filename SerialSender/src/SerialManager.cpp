@@ -8,7 +8,6 @@
 #include <thread>
 #include <chrono>
 
-
 SerialManager::SerialManager(const std::string& name, const long& baud) {
 
 	//defines how much to wait for a message
@@ -21,20 +20,36 @@ SerialManager::SerialManager(const std::string& name, const long& baud) {
 
 	port.open(name, baud, timeout);   //open the port
 
-	t = std::thread(&SerialManager::readThread, this);
-	threadRunning = true;
+	startThread();
+
 }
 
 SerialManager::~SerialManager() {
-	threadRunning = false;
-	port.close();
-	t.join();
+	closePort();
+	stopThread();
+}
+
+
+void SerialManager::startThread() {
+	if (!threadRunning) {
+		t = std::thread(&SerialManager::readThread, this);
+		threadRunning = true;
+	}
+}
+
+
+void SerialManager::stopThread() {
+	if (threadRunning) {
+		threadRunning = false;
+		t.join();
+	}
 }
 
 
 
 void SerialManager::closePort() {
 	port.close();
+	stopThread();
 }
 
 std::string SerialManager::lastMsg() {
@@ -51,7 +66,6 @@ std::string SerialManager::nextMsg() {
 
 //sends a message when the port mutex is free
 void SerialManager::writeMsg(const std::string& msg) {
-	if (!isOpen()) return;
 	portMtx.lock();
 
 	port.send(msg);

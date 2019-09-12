@@ -7,6 +7,8 @@
 #include <thread>
 #include "QueueWrapper.hpp"
 
+
+
 class SerialManager {
 public:
     class SerialOptions {
@@ -14,6 +16,10 @@ public:
     };
 
 private:
+
+	void startThread();
+	void stopThread();
+
     SerialPort port;        //the underlying serial port
     typedef ListWrapper<std::string> MsgCont;  
     MsgCont msgCont;        //read messages go here
