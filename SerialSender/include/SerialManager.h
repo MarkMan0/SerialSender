@@ -22,7 +22,7 @@ private:
 
     bool open = false;      //is the port open?
 
-    void readThread(unsigned long);
+    void readThread();
 
     std::thread t;
 
@@ -44,6 +44,6 @@ public:
 
     void writeMsg(const std::string& );     //sends a message through the port
 
-    void startPeriodicRead(unsigned long ms);           //starts a periodic reading on the port
+    void startPeriodicRead();           //starts a periodic reading on the port
 
 };

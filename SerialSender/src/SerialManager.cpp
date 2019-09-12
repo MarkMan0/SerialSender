@@ -63,7 +63,7 @@ void SerialManager::writeMsg(const std::string& msg) {
 	portMtx.unlock();
 }
 
-void SerialManager::readThread(unsigned long ms) {
+void SerialManager::readThread() {
 	while (1) {
 		auto msg = port.readOnEvent();
 
@@ -82,7 +82,7 @@ void SerialManager::readThread(unsigned long ms) {
 }
 
 
-void SerialManager::startPeriodicRead(unsigned long ms) {
-	t = std::thread(&SerialManager::readThread, this, ms);
+void SerialManager::startPeriodicRead() {
+	t = std::thread(&SerialManager::readThread, this);
 	//t.join();
 }
