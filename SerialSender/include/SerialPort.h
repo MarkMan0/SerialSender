@@ -24,6 +24,8 @@ private:
 	void open(const std::string&, unsigned long, COMMTIMEOUTS);     //opens the port
 	void close();       //closes the port
 
+	std::string readOnEvent();
+
 public:
 	~SerialPort();
 };

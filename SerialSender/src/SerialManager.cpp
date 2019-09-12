@@ -65,86 +65,12 @@ void SerialManager::writeMsg(const std::string& msg) {
 
 void SerialManager::readThread(unsigned long ms) {
 
-	DWORD dwCommEvent = 0;
-	DWORD dwRead = 0;
-	char  chRead = 0;
-
-
-	OVERLAPPED osReader = { 0 };
-	BOOL fWaitingOnRead = FALSE;
-	osReader.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-	if (osReader.hEvent == NULL) {
-		return;
-	}
+	
 
 
 
 	while (1) {
-		if (WaitCommEvent(port.hSerial, &dwCommEvent, NULL)) {
-			fWaitingOnRead = FALSE;
-			//receive char event occoured
-			//reead all the available bytes
-			do {
-				//begin overlapped reading
-				//returns TRUE if reading done immediately, false if error OR waiting
-				if (!ReadFile(port.hSerial, &chRead, 1, &dwRead, &osReader)) {
-					if (GetLastError() != ERROR_IO_PENDING) {   // read not delayed?
-						//Error occoured
-						//break;
-					}
-					else {
-						//read not done immediately, need to wait
-						fWaitingOnRead = TRUE;
-					}
-				}
-				else {
-					// read completed immediately
-					fWaitingOnRead = FALSE;
-					std::cout << chRead;
-				}
-				DWORD dwRes;	//the result of the wait
-
-				if (fWaitingOnRead) {		//if we are waiting on a read
-					dwRes = WaitForSingleObject(osReader.hEvent, INFINITE);		//wait forever
-					switch (dwRes) {
-						// Read completed.
-					case WAIT_OBJECT_0:
-						if (!GetOverlappedResult(port.hSerial, &osReader, &dwRead, FALSE)) {
-							// Error in communications; report it.
-							//break;
-						}
-						else {
-							// Read completed successfully.
-							std::cout << chRead;
-						}
-
-						//  Reset flag so that another opertion can be issued.
-						fWaitingOnRead = FALSE;
-						break;
-
-					case WAIT_TIMEOUT:
-						5 + 5;
-						// Operation isn't complete yet. fWaitingOnRead flag isn't
-						// changed since I'll loop back around, and I don't want
-						// to issue another read until the first one finishes.
-						//
-						// This is a good time to do some background work.
-						//break;
-
-					default:
-						5 + 5;
-						// Error in the WaitForSingleObject; abort.
-						// This indicates a problem with the OVERLAPPED structure's
-						// event handle.
-						//break;
-					}
-				}
-			} while (dwRead);	//while the bytes read is greater than 0, read
-		}
-		else {
-			// Error in WaitCommEvent
-			break;
-		}
+		
 	}
 
 }
