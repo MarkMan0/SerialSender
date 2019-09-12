@@ -137,19 +137,21 @@ void SerialPort::send(const std::string& cmd) {
 
 
 
-
+//on receive event, reads the port while there is data available, and then returns
+//the whole data as std::string
 std::string SerialPort::readOnEvent() {
 
 	DWORD dwCommEvent = 0;
 	DWORD dwRead = 0;
 	char  chRead = 0;
 
+	std::string msg("");
 
 	OVERLAPPED osReader = { 0 };
 	BOOL fWaitingOnRead = FALSE;
 	osReader.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 	if (osReader.hEvent == NULL) {
-		return;
+		return msg;
 	}
 
 	if (WaitCommEvent(hSerial, &dwCommEvent, NULL)) {
@@ -162,7 +164,7 @@ std::string SerialPort::readOnEvent() {
 			if (!ReadFile(hSerial, &chRead, 1, &dwRead, &osReader)) {
 				if (GetLastError() != ERROR_IO_PENDING) {   // read not delayed?
 					//Error occoured
-					//break;
+					break;
 				}
 				else {
 					//read not done immediately, need to wait
@@ -172,7 +174,7 @@ std::string SerialPort::readOnEvent() {
 			else {
 				// read completed immediately
 				fWaitingOnRead = FALSE;
-				std::cout << chRead;
+				msg += chRead;
 			}
 			DWORD dwRes;	//the result of the wait
 
@@ -187,7 +189,7 @@ std::string SerialPort::readOnEvent() {
 					}
 					else {
 						// Read completed successfully.
-						std::cout << chRead;
+						msg += chRead;
 					}
 
 					//  Reset flag so that another opertion can be issued.
@@ -195,20 +197,21 @@ std::string SerialPort::readOnEvent() {
 					break;
 
 				case WAIT_TIMEOUT:
-					5 + 5;
+					//TODO:
+					//	count the timeouts, and decide, whether the com port was disconnected
+
 					// Operation isn't complete yet. fWaitingOnRead flag isn't
 					// changed since I'll loop back around, and I don't want
 					// to issue another read until the first one finishes.
 					//
 					// This is a good time to do some background work.
-					//break;
+					break;
 
 				default:
-					5 + 5;
 					// Error in the WaitForSingleObject; abort.
 					// This indicates a problem with the OVERLAPPED structure's
 					// event handle.
-					//break;
+					break;
 				}
 			}
 		} while (dwRead);	//while the bytes read is greater than 0, read
@@ -216,4 +219,7 @@ std::string SerialPort::readOnEvent() {
 	else {
 		// Error in WaitCommEvent
 	}
+	return msg;
+
+	CloseHandle(osReader.hEvent);
 }
