@@ -32,17 +32,6 @@ SerialManager::~SerialManager() {
 }
 
 
-void SerialManager::readPort() {
-	if (!isOpen()) return;       //port no open, nothing to do
-
-	portMtx.lock(); //TODO:: called periodically, need to wait???
-	std::string msg = "";
-	if (msg.size() > 1)
-		msgCont.push_back_mtx(msg);  //read a message and push to the queue
-
-	portMtx.unlock();       //unclock the mutex
-}
-
 
 void SerialManager::closePort() {
 	port.close();

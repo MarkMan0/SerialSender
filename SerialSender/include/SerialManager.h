@@ -38,7 +38,6 @@ public:
     void closePort();
     bool isOpen() {return port.open(); }
 
-    void readPort();
 
     std::string nextMsg();      //gets the latest message
     std::string lastMsg();
