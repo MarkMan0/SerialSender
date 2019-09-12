@@ -64,12 +64,18 @@ void SerialManager::writeMsg(const std::string& msg) {
 }
 
 void SerialManager::readThread(unsigned long ms) {
-
-	
-
-
-
 	while (1) {
+		auto msg = port.readOnEvent();
+
+		//print the string char by char
+		//indent every line by \t
+		std::cout << "Received: \n\t";
+		for (char c : msg) {
+			std::cout << c;
+			if (c == '\n' || c == '\r') {
+				std::cout << '\t';
+			}
+		}
 		
 	}
 
