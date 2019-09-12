@@ -83,18 +83,24 @@ void SerialPort::readErr() {
 
 void SerialPort::send(const std::string& cmd) {
 	
-	OVERLAPPED osWrite = { 0 };
+	OVERLAPPED ov = { 0 };
+
+
+	auto eventCloser = [](OVERLAPPED* ov) {	CloseHandle(ov->hEvent); };
+
+	std::unique_ptr<OVERLAPPED, decltype(eventCloser)> osWrite(&ov, eventCloser);
+
 	DWORD dwWritten = 0;
 	DWORD dwRes = 0;
 	BOOL fRes = 0;
 
     std::string msg = cmd + "\r";   //add return character to the string
-	osWrite.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-	if (osWrite.hEvent == NULL) {
+	osWrite->hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+	if (osWrite->hEvent == NULL) {
 		return;
 	}
 
-	if (!WriteFile(hSerial, msg.c_str(), msg.size(), &dwWritten, &osWrite)) {
+	if (!WriteFile(hSerial, msg.c_str(), msg.size(), &dwWritten, osWrite.get())) {
 		if (GetLastError() != ERROR_IO_PENDING) {
 			// WriteFile failed, but isn't delayed. Report error and abort.
 			fRes = FALSE;
@@ -102,12 +108,12 @@ void SerialPort::send(const std::string& cmd) {
 		}
 		else {
 			// Write is pending.
-			dwRes = WaitForSingleObject(osWrite.hEvent, INFINITE);
+			dwRes = WaitForSingleObject(osWrite->hEvent, INFINITE);
 		}
 		switch (dwRes) {
 			// OVERLAPPED structure's event has been signaled. 
 		case WAIT_OBJECT_0:
-			if (!GetOverlappedResult(hSerial, &osWrite, &dwWritten, FALSE)) {
+			if (!GetOverlappedResult(hSerial, osWrite.get(), &dwWritten, FALSE)) {
 				fRes = FALSE;
 				std::cout << "Send fail" << std::endl;
 			}
@@ -132,7 +138,6 @@ void SerialPort::send(const std::string& cmd) {
 		fRes = TRUE;
 	}
 
-	CloseHandle(osWrite.hEvent);
 }
 
 
@@ -147,10 +152,17 @@ std::string SerialPort::readOnEvent() {
 
 	std::string msg("");
 
-	OVERLAPPED osReader = { 0 };
+	OVERLAPPED ov = { 0 };
+
+	auto eventCloser = [](OVERLAPPED* ov) {	CloseHandle(ov->hEvent); };
+
+	std::unique_ptr<OVERLAPPED, decltype(eventCloser)> osReader(&ov, eventCloser);
+
+
+
 	BOOL fWaitingOnRead = FALSE;
-	osReader.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-	if (osReader.hEvent == NULL) {
+	osReader->hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+	if (osReader->hEvent == NULL) {
 		return msg;
 	}
 
@@ -161,7 +173,7 @@ std::string SerialPort::readOnEvent() {
 		do {
 			//begin overlapped reading
 			//returns TRUE if reading done immediately, false if error OR waiting
-			if (!ReadFile(hSerial, &chRead, 1, &dwRead, &osReader)) {
+			if (!ReadFile(hSerial, &chRead, 1, &dwRead, osReader.get())) {
 				if (GetLastError() != ERROR_IO_PENDING) {   // read not delayed?
 					//Error occoured
 					break;
@@ -179,11 +191,11 @@ std::string SerialPort::readOnEvent() {
 			DWORD dwRes;	//the result of the wait
 
 			if (fWaitingOnRead) {		//if we are waiting on a read
-				dwRes = WaitForSingleObject(osReader.hEvent, INFINITE);		//wait forever
+				dwRes = WaitForSingleObject(osReader->hEvent, INFINITE);		//wait forever
 				switch (dwRes) {
 					// Read completed.
 				case WAIT_OBJECT_0:
-					if (!GetOverlappedResult(hSerial, &osReader, &dwRead, FALSE)) {
+					if (!GetOverlappedResult(hSerial, osReader.get(), &dwRead, FALSE)) {
 						// Error in communications; report it.
 						//break;
 					}
@@ -220,6 +232,4 @@ std::string SerialPort::readOnEvent() {
 		// Error in WaitCommEvent
 	}
 	return msg;
-
-	CloseHandle(osReader.hEvent);
 }
