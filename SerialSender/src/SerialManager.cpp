@@ -21,15 +21,13 @@ SerialManager::SerialManager(const std::string& name, const long& baud) {
 
 	port.open(name, baud, timeout);   //open the port
 
-	open = true;    //TODO: assuming everything works
-
 	t = std::thread(&SerialManager::readThread, this);
 	threadRunning = true;
 }
 
 SerialManager::~SerialManager() {
 	threadRunning = false;
-	//port.close();
+	port.close();
 	t.join();
 }
 
