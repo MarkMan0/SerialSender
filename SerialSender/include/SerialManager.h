@@ -25,6 +25,7 @@ private:
     void readThread();
 
     std::thread t;
+	bool threadRunning = false;
 
 public:
     SerialManager(const SerialManager&) = delete;       //no copy
@@ -33,6 +34,8 @@ public:
     //constructos also open the port
     SerialManager(const std::string& name, const long& baud);
     SerialManager(const std::string& name, const SerialOptions& options);
+
+	~SerialManager();
 
     void closePort();
     bool isOpen() {return open; }
@@ -43,7 +46,5 @@ public:
     std::string lastMsg();
 
     void writeMsg(const std::string& );     //sends a message through the port
-
-    void startPeriodicRead();           //starts a periodic reading on the port
 
 };

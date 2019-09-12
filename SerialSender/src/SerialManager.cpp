@@ -22,6 +22,15 @@ SerialManager::SerialManager(const std::string& name, const long& baud) {
 	port.open(name, baud, timeout);   //open the port
 
 	open = true;    //TODO: assuming everything works
+
+	t = std::thread(&SerialManager::readThread, this);
+	threadRunning = true;
+}
+
+SerialManager::~SerialManager() {
+	threadRunning = false;
+	//port.close();
+	t.join();
 }
 
 
@@ -64,25 +73,22 @@ void SerialManager::writeMsg(const std::string& msg) {
 }
 
 void SerialManager::readThread() {
-	while (1) {
-		auto msg = port.readOnEvent();
+	while (threadRunning) {
+		if (port.open()) {
+			auto msg = port.readOnEvent();
 
-		//print the string char by char
-		//indent every line by \t
-		std::cout << "Received: \n\t";
-		for (char c : msg) {
-			std::cout << c;
-			if (c == '\n' || c == '\r') {
-				std::cout << '\t';
+			//print the string char by char
+			//indent every line by \t
+			std::cout << "Received: \n\t";
+			for (char c : msg) {
+				std::cout << c;
+				if (c == '\n' || c == '\r') {
+					std::cout << '\t';
+				}
 			}
 		}
 		
 	}
+	std::cout << "CLOSING THREAD" << std::endl;
 
-}
-
-
-void SerialManager::startPeriodicRead() {
-	t = std::thread(&SerialManager::readThread, this);
-	//t.join();
 }
