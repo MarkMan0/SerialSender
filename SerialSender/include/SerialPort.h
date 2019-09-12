@@ -5,7 +5,7 @@
 
 //class to handle the port
 class SerialPort {
-	friend class SerialManager;		//sometimes manipulates the port directly
+	friend class SerialManager;		//manipulates the port directly
 
 private:
     HANDLE hSerial;       //port reference  
@@ -17,15 +17,13 @@ private:
 
     void readErr();                 //reads the last error
 
+	void send(const std::string& cmd);      //sends a message
+
+	SerialPort();       //just constructs, doesn't open
+
+	void open(const std::string&, unsigned long, COMMTIMEOUTS);     //opens the port
+	void close();       //closes the port
+
 public:
-    SerialPort();       //just constructs, doesn't open
-
-    void open(const std::string&, unsigned long, COMMTIMEOUTS);     //opens the port
-    void close();       //closes the port
-
-    ~SerialPort();
-
-    void send(const std::string& cmd);      //sends a message
-    const std::string& receive();           //reads a message
-    const std::string& lastResponse() const;    //returns the last message
+	~SerialPort();
 };
