@@ -131,6 +131,7 @@
     <ClInclude Include="..\include\CommandHandler.h" />
     <ClInclude Include="..\include\commands\AllMsg.h" />
     <ClInclude Include="..\include\commands\Exit.h" />
+    <ClInclude Include="..\include\commands\Open.h" />
     <ClInclude Include="..\include\commands\Send.h" />
     <ClInclude Include="..\include\PrinterState.h" />
     <ClInclude Include="..\include\QueueWrapper.hpp" />
@@ -140,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\CommandHandler.cpp" />
     <ClCompile Include="..\src\commands\Exit.cpp" />
+    <ClCompile Include="..\src\commands\Open.cpp" />
     <ClCompile Include="..\src\commands\Send.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\SerialManager.cpp" />

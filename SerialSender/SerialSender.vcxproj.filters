@@ -48,6 +48,9 @@
     <ClInclude Include="..\include\SerialPort.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\commands\Open.h">
+      <Filter>Header Files\commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\commands\Exit.cpp">
@@ -67,6 +70,9 @@
     </ClCompile>
     <ClCompile Include="..\src\SerialPort.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\commands\Open.cpp">
+      <Filter>Source Files\commands</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

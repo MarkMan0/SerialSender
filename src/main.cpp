@@ -15,6 +15,7 @@
 #include "commands\AllMsg.h"
 #include "SerialManager.h"
 #include "QueueWrapper.hpp"
+#include "commands/Open.h"
 #include <limits>
 
 int main()
@@ -22,7 +23,7 @@ int main()
     using namespace std;
 
 	{
-		std::shared_ptr<SerialManager> mng(new SerialManager("COM4", 115200));
+		std::shared_ptr<SerialManager> mng(new SerialManager());
 		cout << "end" << endl;
 
 
@@ -33,6 +34,8 @@ int main()
 		handler.registerCommand(std::make_unique<Commands::ExitCmd>(mng));
 
 		handler.registerCommand(std::make_unique<Commands::AllMsgCmd>(mng));
+
+		handler.registerCommand(std::make_unique<Commands::Open>(mng));
 
 		handler.run();
 	}
