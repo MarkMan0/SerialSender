@@ -135,7 +135,6 @@
     <ClInclude Include="..\include\commands\Open.h" />
     <ClInclude Include="..\include\commands\Send.h" />
     <ClInclude Include="..\include\PrinterState.h" />
-    <ClInclude Include="..\include\QueueWrapper.hpp" />
     <ClInclude Include="..\include\SerialManager.h" />
     <ClInclude Include="..\include\SerialPort.h" />
   </ItemGroup>

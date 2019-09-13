@@ -39,9 +39,6 @@
     <ClInclude Include="..\include\PrinterState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\QueueWrapper.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\SerialManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
