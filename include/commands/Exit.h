@@ -7,16 +7,14 @@
 #include "Command.h"
 
 namespace Commands {
-class ExitCmd : public Command {
-private:
+	class ExitCmd : public Command {
+	private:
 
-    std::shared_ptr<SerialManager> manager;
+	public:
+		ExitCmd(const std::shared_ptr<SerialManager>& _manager) : Command("Exit", _manager) {}
 
-public:
-    ExitCmd(const std::shared_ptr<SerialManager>& _manager) : Command("Exit"), manager(_manager) {}
+		void execute(const std::string&) override;
 
-    void execute(const std::string&) override;
-
-};
+	};
 
 }

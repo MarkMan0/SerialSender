@@ -10,10 +10,9 @@
 namespace Commands {
     class AllMsgCmd : public Command {
     private:
-        std::shared_ptr<SerialManager> manager;
 
     public:
-        AllMsgCmd(const std::shared_ptr<SerialManager> _manager) : Command("AllMsg"), manager(_manager) {}
+        AllMsgCmd(const std::shared_ptr<SerialManager> _manager) : Command("AllMsg", _manager) {}
 
         void execute(const std::string& cmd) override {
             std::string str;

@@ -3,10 +3,6 @@
 #include "commands\Send.h"
 #include <algorithm>
 
-//inits the Command name and saves the manager
-Commands::SendCmd::SendCmd(const std::shared_ptr<SerialManager>& _manager) : Command("Send"), manager(_manager) {
-    //port has to be initialized
-}
 
 //executes a send command
 void Commands::SendCmd::execute(const std::string& line) {

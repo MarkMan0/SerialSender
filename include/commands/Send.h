@@ -11,10 +11,9 @@ namespace Commands {
     class SendCmd : public Command {
 
     private:
-        std::shared_ptr<SerialManager> manager;     //shared serial port
 
     public:
-        SendCmd(const std::shared_ptr<SerialManager>& _manager);
+		SendCmd(const std::shared_ptr<SerialManager>& _manager) : Command("Send", _manager) {}
         void execute(const std::string&) override;
     };
 
