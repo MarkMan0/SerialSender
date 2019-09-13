@@ -51,6 +51,9 @@
     <ClInclude Include="..\include\commands\Open.h">
       <Filter>Header Files\commands</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\commands\Close.h">
+      <Filter>Header Files\commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\commands\Exit.cpp">
@@ -72,6 +75,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\commands\Open.cpp">
+      <Filter>Source Files\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\commands\Close.cpp">
       <Filter>Source Files\commands</Filter>
     </ClCompile>
   </ItemGroup>

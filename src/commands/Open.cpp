@@ -6,7 +6,7 @@
 #include "SerialManager.h"
 
 
-void Commands::Open::execute(const std::string& line) {
+void Commands::OpenCmd::execute(const std::string& line) {
 
 	std::vector<std::string> strVec;
 

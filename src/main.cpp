@@ -16,6 +16,7 @@
 #include "SerialManager.h"
 #include "QueueWrapper.hpp"
 #include "commands/Open.h"
+#include "commands/Close.h"
 #include <limits>
 
 int main()
@@ -35,7 +36,9 @@ int main()
 
 		handler.registerCommand(std::make_unique<Commands::AllMsgCmd>(mng));
 
-		handler.registerCommand(std::make_unique<Commands::Open>(mng));
+		handler.registerCommand(std::make_unique<Commands::OpenCmd>(mng));
+
+		handler.registerCommand(std::make_unique<Commands::CloseCmd>(mng));
 
 		handler.run();
 	}

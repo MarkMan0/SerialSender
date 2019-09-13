@@ -6,10 +6,10 @@
 #include "SerialManager.h"
 
 namespace Commands {
-	class Open : public Command {
+	class OpenCmd : public Command {
 
 	public:
-		Open(const std::shared_ptr<SerialManager>& _manager) : Command("Open", _manager) {}
+		OpenCmd(const std::shared_ptr<SerialManager>& _manager) : Command("Open", _manager) {}
 
 		void execute(const std::string& line) override;
 	};

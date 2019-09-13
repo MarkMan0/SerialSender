@@ -130,6 +130,7 @@
     <ClInclude Include="..\include\Command.h" />
     <ClInclude Include="..\include\CommandHandler.h" />
     <ClInclude Include="..\include\commands\AllMsg.h" />
+    <ClInclude Include="..\include\commands\Close.h" />
     <ClInclude Include="..\include\commands\Exit.h" />
     <ClInclude Include="..\include\commands\Open.h" />
     <ClInclude Include="..\include\commands\Send.h" />
@@ -140,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\CommandHandler.cpp" />
+    <ClCompile Include="..\src\commands\Close.cpp" />
     <ClCompile Include="..\src\commands\Exit.cpp" />
     <ClCompile Include="..\src\commands\Open.cpp" />
     <ClCompile Include="..\src\commands\Send.cpp" />
