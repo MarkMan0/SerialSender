@@ -8,7 +8,31 @@
 #include <thread>
 #include <chrono>
 
-SerialManager::SerialManager(const std::string& name, const long& baud) {
+SerialManager::SerialManager(const std::string& _name, unsigned long _baud) : portName(_name), baud(_baud) {
+	openPort();
+}
+
+
+void SerialManager::openPort() {
+	if (portName.size() > 0) {
+		openPort(portName, baud);
+	}
+}
+
+//opens the serial port specified in its parameters
+//if the parameters have the same port, closes than reopens it
+void SerialManager::openPort(const std::string& _name, unsigned long _baud) {
+
+	if (port.open()) {
+		port.close();
+	}
+
+	if (threadRunning) {
+		stopThread();
+	}
+
+	portName = _name;
+	baud = _baud;
 
 	//return from readFile immediately, even if no data was read
 	//must for non-blocking IO
@@ -19,11 +43,11 @@ SerialManager::SerialManager(const std::string& name, const long& baud) {
 	timeout.WriteTotalTimeoutConstant = 0;
 	timeout.WriteTotalTimeoutMultiplier = 0;
 
-	port.open(name, baud, timeout);   //open the port
+	port.open(portName, baud, timeout);   //open the port
 
 	startThread();
-
 }
+
 
 SerialManager::~SerialManager() {
 	closePort();
