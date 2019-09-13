@@ -25,8 +25,6 @@ private:
 
     MsgCont msgCont;        //read messages go here
 
-    std::mutex portMtx;       //mutex for blocking the serial port
-
 	//		THREAD REALTED FUNCTIONS
 
 	void startThread();		//helper functions that start the thread and set a flag

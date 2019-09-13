@@ -67,11 +67,7 @@ std::string SerialManager::nextMsg() {
 
 //sends a message when the port mutex is free
 void SerialManager::writeMsg(const std::string& msg) {
-	portMtx.lock();
-
 	port.send(msg);
-
-	portMtx.unlock();
 }
 
 void SerialManager::readThread() {
