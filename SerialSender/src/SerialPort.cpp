@@ -5,11 +5,11 @@
 #include <string>
 
 
-SerialPort::SerialPort() : hSerial(0), lastErrBuff({ 0 }) {
+SerialPort::SerialPort() : hSerial(0), lastErrBuff{ 0 } {
 }
 
-SerialPort::SerialPort(SerialPort&& old) : hSerial(old.hSerial), isOpen(old.isOpen), lastErrBuff({ 0 }) {
-	old.open = false;
+SerialPort::SerialPort(SerialPort&& old) : hSerial(old.hSerial), isOpen(old.isOpen), lastErrBuff{ 0 } {
+	old.isOpen = false;
 }
 
 SerialPort& SerialPort::operator=(SerialPort&& old) noexcept {
@@ -262,7 +262,8 @@ inline void readAvailable(HANDLE* h, std::string& dest) {
 //the whole data as std::string
 std::string SerialPort::readOnEvent() {
 
-	if (!isOpen) return "";
+	if (!isOpen) 
+		return "";
 
 	DWORD dwCommEvent = 0;
 

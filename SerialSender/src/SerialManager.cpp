@@ -80,11 +80,13 @@ void SerialManager::readThread() {
 
 			//print the string char by char
 			//indent every line by \t
-			std::cout << "Received: \n\t";
-			for (char c : msg) {
-				std::cout << c;
-				if (c == '\n' || c == '\r') {
-					std::cout << '\t';
+			if (msg.size() > 0) {
+				std::cout << "Received: \n\t";
+				for (char c : msg) {
+					std::cout << c;
+					if (c == '\n' || c == '\r') {
+						std::cout << '\t';
+					}
 				}
 			}
 		}
