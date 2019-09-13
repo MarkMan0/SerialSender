@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\commands">
+      <UniqueIdentifier>{c5ded8ed-2ab3-4e9c-95b9-4015e81fdbec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\commands">
+      <UniqueIdentifier>{22794b55-89b0-4766-a768-315155b37c52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Command.h">
@@ -33,14 +39,14 @@
     <ClInclude Include="include\SerialPort.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\commands\AllMsg.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\commands\Send.h">
+      <Filter>Header Files\commands</Filter>
     </ClInclude>
     <ClInclude Include="..\include\commands\Exit.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\commands</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\commands\Send.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\commands\AllMsg.h">
+      <Filter>Header Files\commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -57,10 +63,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\commands\Exit.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\commands</Filter>
     </ClCompile>
     <ClCompile Include="..\src\commands\Send.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\commands</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
