@@ -8,7 +8,7 @@
 SerialPort::SerialPort() : hSerial(0), lastErrBuff{ 0 } {
 }
 
-SerialPort::SerialPort(SerialPort&& old) : hSerial(old.hSerial), isOpen(old.isOpen), lastErrBuff{ 0 } {
+SerialPort::SerialPort(SerialPort&& old) noexcept : hSerial(old.hSerial), isOpen(old.isOpen), lastErrBuff{ 0 } {
 	old.isOpen = false;
 }
 

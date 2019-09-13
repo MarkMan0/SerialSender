@@ -12,7 +12,7 @@ private:
 
 	SerialPort();       //just constructs, doesn't open
 	SerialPort(const SerialPort&) = delete;		//copy makes no sense for a serialport
-	SerialPort(SerialPort&&);
+	SerialPort(SerialPort&&) noexcept;
 	SerialPort& operator=(const SerialPort&) = delete;
 	SerialPort& operator=(SerialPort&&) noexcept;
 	~SerialPort();
