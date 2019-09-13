@@ -10,7 +10,8 @@
 
 SerialManager::SerialManager(const std::string& name, const long& baud) {
 
-	//defines how much to wait for a message
+	//return from readFile immediately, even if no data was read
+	//must for non-blocking IO
 	COMMTIMEOUTS timeout = { 0 };
 	timeout.ReadIntervalTimeout = MAXDWORD;
 	timeout.ReadTotalTimeoutConstant = 0;
@@ -80,7 +81,7 @@ void SerialManager::readThread() {
 
 			//print the string char by char
 			//indent every line by \t
-			if (msg.size() > 0) {
+			if (msg.size() > 0) {	//reponse was not empty
 				std::cout << "Received: \n\t";
 				for (char c : msg) {
 					std::cout << c;

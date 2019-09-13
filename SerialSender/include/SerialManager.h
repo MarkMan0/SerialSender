@@ -17,19 +17,25 @@ public:
 
 private:
 
-	void startThread();
-	void stopThread();
+
 
     SerialPort port;        //the underlying serial port
-    typedef ListWrapper<std::string> MsgCont;  
+
+    typedef ListWrapper<std::string> MsgCont;  //TODO: this needs to be changed
+
     MsgCont msgCont;        //read messages go here
 
     std::mutex portMtx;       //mutex for blocking the serial port
 
-    void readThread();
+	//		THREAD REALTED FUNCTIONS
 
+	void startThread();		//helper functions that start the thread and set a flag
+	void stopThread();
+
+    void readThread();		//thread where we are waiting for serial events
     std::thread t;
-	bool threadRunning = false;
+
+	bool threadRunning = false;	//used as condition in the thread infinite loop
 
 public:
     SerialManager(const SerialManager&) = delete;       //no copy
@@ -39,10 +45,13 @@ public:
     SerialManager(const std::string& name, const long& baud);
     SerialManager(const std::string& name, const SerialOptions& options);
 
-	~SerialManager();
+	//TODO: implement move constructor and assignment operator
 
-    void closePort();
-    bool isOpen() {return port.open(); }
+	~SerialManager();	//closes the port and the thread
+
+    void closePort();	//close the port
+
+    bool isOpen() {return port.open(); }	//check if the port is open
 
 
     std::string nextMsg();      //gets the latest message
