@@ -14,7 +14,6 @@
 #include "commands\Exit.h"
 #include "commands\AllMsg.h"
 #include "SerialManager.h"
-#include "QueueWrapper.hpp"
 #include "commands/Open.h"
 #include "commands/Close.h"
 #include <limits>

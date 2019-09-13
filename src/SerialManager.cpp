@@ -78,15 +78,16 @@ void SerialManager::closePort() {
 }
 
 std::string SerialManager::lastMsg() {
-	std::string msg;
-	msgCont.pop_back_to(msg);
-	return msg;
+	if(msgCont.size() > 0)
+		return msgCont.front();
+
+	return "";
 }
 
 std::string SerialManager::nextMsg() {
-	std::string tmp;
-	msgCont.pop_front_to(tmp);     //pops and returns the next message from the queue
-	return tmp;
+	if (msgCont.size() > 0)
+		return msgCont.back();
+	return "";
 }
 
 //sends a message when the port mutex is free
@@ -109,10 +110,10 @@ void SerialManager::readThread() {
 						std::cout << '\t';
 					}
 				}
+				msgCont.push_front((msg));
 			}
 		}
 		
 	}
-	std::cout << "CLOSING THREAD" << std::endl;
 
 }

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <SerialPort.h>
+#include "SerialPort.h"
 #include <queue>
 #include <string>
 #include <mutex>
 #include <thread>
-#include "QueueWrapper.hpp"
+#include <list>
 
 
 
@@ -24,7 +24,7 @@ private:
 	std::string portName;
 	unsigned long baud;
 
-    typedef ListWrapper<std::string> MsgCont;  //TODO: this needs to be changed
+    typedef std::list<std::string> MsgCont;  //TODO: this needs to be changed
 
     MsgCont msgCont;        //read messages go here
 
