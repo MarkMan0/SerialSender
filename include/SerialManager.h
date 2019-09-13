@@ -3,9 +3,11 @@
 #include <SerialPort.h>
 #include <queue>
 #include <string>
-#include <boost/thread/mutex.hpp>
+#include <mutex>
 #include <thread>
 #include "QueueWrapper.hpp"
+
+
 
 class SerialManager {
 public:
@@ -14,17 +16,24 @@ public:
     };
 
 private:
+
+
+
     SerialPort port;        //the underlying serial port
-    typedef ListWrapper<std::string> MsgCont;  
+
+    typedef ListWrapper<std::string> MsgCont;  //TODO: this needs to be changed
+
     MsgCont msgCont;        //read messages go here
 
-    boost::mutex portMtx;       //mutex for blocking the serial port
+	//		THREAD REALTED FUNCTIONS
 
-    bool open = false;      //is the port open?
+	void startThread();		//helper functions that start the thread and set a flag
+	void stopThread();
 
-    void readThread(unsigned long);
-
+    void readThread();		//thread where we are waiting for serial events
     std::thread t;
+
+	bool threadRunning = false;	//used as condition in the thread infinite loop
 
 public:
     SerialManager(const SerialManager&) = delete;       //no copy
@@ -34,16 +43,18 @@ public:
     SerialManager(const std::string& name, const long& baud);
     SerialManager(const std::string& name, const SerialOptions& options);
 
-    void closePort();
-    bool isOpen() {return open; }
+	//TODO: implement move constructor and assignment operator
 
-    void readPort();
+	~SerialManager();	//closes the port and the thread
+
+    void closePort();	//close the port
+
+    bool isOpen() {return port.open(); }	//check if the port is open
+
 
     std::string nextMsg();      //gets the latest message
     std::string lastMsg();
 
     void writeMsg(const std::string& );     //sends a message through the port
-
-    void startPeriodicRead(unsigned long ms);           //starts a periodic reading on the port
 
 };

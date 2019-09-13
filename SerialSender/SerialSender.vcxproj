@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\boost_1_70_0;C:\Users\Mark\Documents\Progs\SerialSender\SerialSender\include\commands;C:\Users\Mark\Documents\Progs\SerialSender\SerialSender\include;$(IncludePath)</IncludePath>
-    <SourcePath>C:\Users\Mark\Documents\Progs\SerialSender\SerialSender\src\commands;C:\Users\Mark\Documents\Progs\SerialSender\src;$(SourcePath)</SourcePath>
+    <IncludePath>C:\boost_1_70_0;C:\Users\Mark\Documents\Progs\SerialSender\include\commands;C:\Users\Mark\Documents\Progs\SerialSender\include;$(IncludePath)</IncludePath>
+    <SourcePath>C:\Users\Mark\Documents\Progs\SerialSender\src\commands;C:\Users\Mark\Documents\Progs\SerialSender\src;$(SourcePath)</SourcePath>
     <LibraryPath>C:\boost_1_70_0\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -127,23 +127,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\Command.h" />
+    <ClInclude Include="..\include\CommandHandler.h" />
     <ClInclude Include="..\include\commands\AllMsg.h" />
     <ClInclude Include="..\include\commands\Exit.h" />
     <ClInclude Include="..\include\commands\Send.h" />
-    <ClInclude Include="include\Command.h" />
-    <ClInclude Include="include\CommandHandler.h" />
-    <ClInclude Include="include\PrinterState.h" />
-    <ClInclude Include="include\QueueWrapper.hpp" />
-    <ClInclude Include="include\SerialManager.h" />
-    <ClInclude Include="include\SerialPort.h" />
+    <ClInclude Include="..\include\PrinterState.h" />
+    <ClInclude Include="..\include\QueueWrapper.hpp" />
+    <ClInclude Include="..\include\SerialManager.h" />
+    <ClInclude Include="..\include\SerialPort.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\CommandHandler.cpp" />
     <ClCompile Include="..\src\commands\Exit.cpp" />
     <ClCompile Include="..\src\commands\Send.cpp" />
-    <ClCompile Include="src\CommandHandler.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\SerialManager.cpp" />
-    <ClCompile Include="src\SerialPort.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\SerialManager.cpp" />
+    <ClCompile Include="..\src\SerialPort.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

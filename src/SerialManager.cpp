@@ -8,70 +8,87 @@
 #include <thread>
 #include <chrono>
 
-
 SerialManager::SerialManager(const std::string& name, const long& baud) {
 
-    //defines how much to wait for a message
-    COMMTIMEOUTS timeout = { 0 };
-    timeout.ReadIntervalTimeout = MAXDWORD ;
-    timeout.ReadTotalTimeoutConstant = 100;
-    timeout.ReadTotalTimeoutMultiplier = MAXDWORD ;
-    timeout.WriteTotalTimeoutConstant = 50;
-    timeout.WriteTotalTimeoutMultiplier = 10;
+	//return from readFile immediately, even if no data was read
+	//must for non-blocking IO
+	COMMTIMEOUTS timeout = { 0 };
+	timeout.ReadIntervalTimeout = MAXDWORD;
+	timeout.ReadTotalTimeoutConstant = 0;
+	timeout.ReadTotalTimeoutMultiplier = 0;
+	timeout.WriteTotalTimeoutConstant = 0;
+	timeout.WriteTotalTimeoutMultiplier = 0;
 
-    port.open(name, baud, timeout);   //open the port
+	port.open(name, baud, timeout);   //open the port
 
-    open = true;    //TODO: assuming everything works
+	startThread();
+
+}
+
+SerialManager::~SerialManager() {
+	closePort();
+	stopThread();
 }
 
 
-void SerialManager::readPort() {
-    if(!isOpen()) return;       //port no open, nothing to do
-
-    portMtx.lock(); //TODO:: called periodically, need to wait???
-    std::string msg = port.receive();
-    if(msg.size() > 1)
-        msgCont.push_back_mtx(msg);  //read a message and push to the queue
-
-    portMtx.unlock();       //unclock the mutex
+void SerialManager::startThread() {
+	if (!threadRunning) {
+		t = std::thread(&SerialManager::readThread, this);
+		threadRunning = true;
+	}
 }
+
+
+void SerialManager::stopThread() {
+	if (threadRunning) {
+		threadRunning = false;
+		t.join();
+	}
+}
+
 
 
 void SerialManager::closePort() {
-    port.close();
+	port.close();
+	stopThread();
 }
 
 std::string SerialManager::lastMsg() {
-    std::string msg;
-    msgCont.pop_back_to(msg);
-    return msg;
+	std::string msg;
+	msgCont.pop_back_to(msg);
+	return msg;
 }
 
 std::string SerialManager::nextMsg() {
-    std::string tmp;
-    msgCont.pop_front_to(tmp);     //pops and returns the next message from the queue
-    return tmp;
+	std::string tmp;
+	msgCont.pop_front_to(tmp);     //pops and returns the next message from the queue
+	return tmp;
 }
 
 //sends a message when the port mutex is free
 void SerialManager::writeMsg(const std::string& msg) {
-    if(!isOpen()) return;
-    portMtx.lock();
-
-    port.send(msg);
-
-    portMtx.unlock();
+	port.send(msg);
 }
 
-void SerialManager::readThread(unsigned long ms) {
-    while(1) {
-        this->readPort();
-        std::this_thread::sleep_for(std::chrono::milliseconds(ms));
-    }
-}
+void SerialManager::readThread() {
+	while (threadRunning) {
+		if (port.open()) {
+			auto msg = port.readOnEvent();
 
+			//print the string char by char
+			//indent every line by \t
+			if (msg.size() > 0) {	//reponse was not empty
+				std::cout << "Received: \n\t";
+				for (char c : msg) {
+					std::cout << c;
+					if (c == '\n' || c == '\r') {
+						std::cout << '\t';
+					}
+				}
+			}
+		}
+		
+	}
+	std::cout << "CLOSING THREAD" << std::endl;
 
-void SerialManager::startPeriodicRead(unsigned long ms) {
-    t = std::thread(&SerialManager::readThread, this, ms);
-    //t.join();
 }

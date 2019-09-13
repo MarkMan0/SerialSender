@@ -11,5 +11,4 @@ public:
     virtual ~Command() {}
     virtual void execute(const std::string& line) = 0;  //must be implemented in derived
     const std::string& getName() const { return name; }
-    virtual Command* clone() const = 0;             //derived implements this
 };

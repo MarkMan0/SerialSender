@@ -21,23 +21,21 @@ int main()
 { 
     using namespace std;
 
-    
-    std::shared_ptr<SerialManager> mng(new SerialManager("COM6", 250000));
-    mng->startPeriodicRead(5000);
-    cout << "end" << endl;
-    
+	{
+		std::shared_ptr<SerialManager> mng(new SerialManager("COM4", 115200));
+		cout << "end" << endl;
 
-    CommandHandler handler;
-    Command* cmd = new Commands::SendCmd(mng);
-    handler.registerCommand(cmd);
 
-    cmd = new Commands::ExitCmd(mng);
-    handler.registerCommand(cmd);
+		CommandHandler handler;
 
-    cmd = new Commands::AllMsgCmd(mng);
-    handler.registerCommand(cmd);
+		handler.registerCommand(std::make_unique<Commands::SendCmd>(mng));
 
-    handler.run();
+		handler.registerCommand(std::make_unique<Commands::ExitCmd>(mng));
+
+		handler.registerCommand(std::make_unique<Commands::AllMsgCmd>(mng));
+
+		handler.run();
+	}
 
     cout << "END" << endl;
     system("pause");
