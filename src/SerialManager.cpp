@@ -96,6 +96,7 @@ void SerialManager::writeMsg(const std::string& msg) {
 }
 
 void SerialManager::readThread() {
+	std::string oneLine;
 	while (threadRunning) {
 		if (port.open()) {
 			auto msg = port.readOnEvent();
@@ -103,14 +104,16 @@ void SerialManager::readThread() {
 			//print the string char by char
 			//indent every line by \t
 			if (msg.size() > 0) {	//reponse was not empty
-				std::cout << "Received: \n\t";
 				for (char c : msg) {
-					std::cout << c;
-					if (c == '\n' || c == '\r') {
-						std::cout << '\t';
+					if (c == '\n') {
+						msgCont.push_front(oneLine);
+						std::cout << oneLine << std::endl;
+						oneLine.clear();
+					}
+					else {
+						oneLine += c;
 					}
 				}
-				msgCont.push_front((msg));
 			}
 		}
 		
