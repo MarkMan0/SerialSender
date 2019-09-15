@@ -35,5 +35,5 @@ private:
 	void close();       //closes the port
 
 	std::string readOnEvent();
-	void readAvailable(std::string& dest)
+	void readAvailable(std::string& dest);
 };
