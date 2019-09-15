@@ -32,7 +32,7 @@ private:
 
 	void open(const std::string&, unsigned long, COMMTIMEOUTS);     //opens the port
 	bool open() { return isOpen; }
-	void close();       //closes the port
+	void close() noexcept;       //closes the port
 
 	std::string readOnEvent();
 	void readAvailable(std::string& dest);

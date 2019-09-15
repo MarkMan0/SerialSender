@@ -74,7 +74,7 @@ void SerialManager::stopThread() {
 
 
 
-void SerialManager::closePort() {
+void SerialManager::closePort() noexcept {
 	port.close();
 	stopThread();
 }

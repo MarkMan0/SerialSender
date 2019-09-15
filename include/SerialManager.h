@@ -56,7 +56,7 @@ public:
 	void openPort();
 	void openPort(const std::string& name, unsigned long _baud);
 
-    void closePort();	//close the port
+    void closePort() noexcept;	//close the port
 
     bool isOpen() {return port.open(); }	//check if the port is open
 

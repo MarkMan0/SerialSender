@@ -98,7 +98,7 @@ void SerialPort::open(const std::string& name, unsigned long baudRate, COMMTIMEO
 }
 
 
-void SerialPort::close() {
+void SerialPort::close() noexcept {
 	if (isOpen) {
 		CloseHandle(hSerial);   //closes the port
 		isOpen = false;
