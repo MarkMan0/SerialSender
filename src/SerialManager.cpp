@@ -8,6 +8,8 @@
 #include <thread>
 #include <chrono>
 
+#include "exceptions/serial_io_error.h"
+
 SerialManager::SerialManager(const std::string& _name, unsigned long _baud) : portName(_name), baud(_baud) {
 	openPort();
 }
@@ -99,21 +101,30 @@ void SerialManager::readThread() {
 	std::string oneLine;
 	while (threadRunning) {
 		if (port.open()) {
-			auto msg = port.readOnEvent();
+			try {
+				auto msg = port.readOnEvent();
 
-			//print the string char by char
-			//indent every line by \t
-			if (msg.size() > 0) {	//reponse was not empty
-				for (char c : msg) {
-					if (c == '\n') {
-						msgCont.push_front(oneLine);
-						std::cout << oneLine << std::endl;
-						oneLine.clear();
-					}
-					else {
-						oneLine += c;
+				//print the string char by char
+				//indent every line by \t
+				if (msg.size() > 0) {	//reponse was not empty
+					for (char c : msg) {
+						if (c == '\n') {
+							msgCont.push_front(oneLine);
+							std::cout << oneLine << std::endl;
+							oneLine.clear();
+						}
+						else {
+							oneLine += c;
+						}
 					}
 				}
+			} 
+			catch (serial_io_error& e) {
+				std::cerr << "Serial error occoured:\n\t" << e.what() << std::endl;
+			}
+			catch (std::runtime_error& e) {
+				std::cerr << "System error occoured:\n\t" << e.what() << std::endl;
+				//TODO: close port
 			}
 		}
 		
