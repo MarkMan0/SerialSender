@@ -35,7 +35,7 @@ void CommandHandler::run() {
             cmdMap.at(actCmd)->execute(cmd);    //try to find&execute a command
         } catch (out_of_range e) {      //TODO:: fix the warning
             //command not found
-            cout << "Unknown command: " << cmd << endl << e.what() << endl;
+            cout << "Unknown command: " << cmd << endl;
         }
 
     } while( actCmd.compare("Exit"));        //character C stops the run();
