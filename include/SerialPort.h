@@ -17,6 +17,7 @@ private:
 	SerialPort& operator=(SerialPort&&) noexcept;
 	~SerialPort();
 
+	std::string portName;
 
     HANDLE hSerial;       //port reference  
     char lastErrBuff[1024];         //to read the last error
@@ -34,4 +35,5 @@ private:
 	void close();       //closes the port
 
 	std::string readOnEvent();
+	void readAvailable(std::string& dest)
 };

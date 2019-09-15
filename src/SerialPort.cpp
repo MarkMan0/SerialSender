@@ -4,6 +4,9 @@
 #include <iostream>
 #include <string>
 
+#include "exceptions/invalid_port_error.h"
+#include "exceptions/serial_io_error.h"
+
 
 SerialPort::SerialPort() : hSerial(0), lastErrBuff{ 0 } {
 }
@@ -40,16 +43,22 @@ void SerialPort::open(const std::string& name, unsigned long baudRate, COMMTIMEO
 		close();
 	}
 
+	portName = name;
+
     //VS Code shows error, but it compiles without warnings
     hSerial = CreateFile( name.c_str(), GENERIC_READ | GENERIC_WRITE, 
                                     0, 0, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, 0);
 
+	if (hSerial == INVALID_HANDLE_VALUE) {
+		throw invalid_port_error(std::string("Failed to open serial port: ") + name);
+	}
+
     DCB serialParams = { 0 };
     serialParams.DCBlength = sizeof(serialParams);
     GetCommState(hSerial, &serialParams);
-
+	
     serialParams.BaudRate = baudRate;   //set the baud rate
-
+	INVALID_HANDLE_VALUE;
     //from pronterface
     serialParams.fBinary = 1;
     serialParams.fParity = 0;
@@ -77,11 +86,11 @@ void SerialPort::open(const std::string& name, unsigned long baudRate, COMMTIMEO
 
     if(!SetCommState(hSerial, &serialParams)) {
         //TODO: exceptions...
-        std::cout << "Error setting state" << std::endl;
+		throw std::runtime_error("Setting Comm state failed");
     }
 
     if(!SetCommTimeouts(hSerial, &timeouts)) {
-        std::cout << "ERR setting timeouts" << std::endl; 
+		throw std::runtime_error("Setting timeouts failed");
     }
 
 	SetCommMask(hSerial, EV_RXCHAR);	//trigger event on every char receive
@@ -127,14 +136,14 @@ void SerialPort::send(const std::string& cmd) {
     std::string msg = cmd + "\r";   //add return character to the string
 	osWrite->hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 	if (osWrite->hEvent == NULL) {
-		return;
+		throw std::runtime_error("Failed to create OVERLAPPED event in send()");
 	}
 
 	if (!WriteFile(hSerial, msg.c_str(), msg.size(), &dwWritten, osWrite.get())) {
 		if (GetLastError() != ERROR_IO_PENDING) {
 			// WriteFile failed, but isn't delayed. Report error and abort.
 			fRes = FALSE;
-			std::cout << "Send fail" << std::endl;
+			throw serial_io_error(std::string("Send failed to port ") + portName);
 		}
 		else {
 			// Write is pending.
@@ -145,12 +154,11 @@ void SerialPort::send(const std::string& cmd) {
 		case WAIT_OBJECT_0:
 			if (!GetOverlappedResult(hSerial, osWrite.get(), &dwWritten, FALSE)) {
 				fRes = FALSE;
-				std::cout << "Send fail" << std::endl;
+				throw serial_io_error(std::string("Send failed to port ") + portName);
 			}
 			else {
 				// Write operation completed successfully.
 				fRes = TRUE;
-				std::cout << "Send success" << std::endl;
 			}
 				
 			break;
@@ -158,8 +166,8 @@ void SerialPort::send(const std::string& cmd) {
 		default:
 			// An error has occurred in WaitForSingleObject.
 			// This usually indicates a problem with the
-		   // OVERLAPPED structure's event handle.
-			fRes = FALSE;
+		    // OVERLAPPED structure's event handle.
+			throw serial_io_error(std::string("Send failed to port ") + portName);
 			break;
 		}
 	}
@@ -171,7 +179,7 @@ void SerialPort::send(const std::string& cmd) {
 }
 
 
-inline void readAvailable(HANDLE* h, std::string& dest) {
+void SerialPort::readAvailable(std::string& dest) {
 
 	char chRead = '\0';
 
@@ -187,7 +195,7 @@ inline void readAvailable(HANDLE* h, std::string& dest) {
 
 	osReader->hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 	if (osReader->hEvent == NULL) {
-		return;
+		throw std::runtime_error("Failed to create OVERLAPPED event in readAvailable()");
 	}
 	else {
 		handleOpen = true;
@@ -199,10 +207,9 @@ inline void readAvailable(HANDLE* h, std::string& dest) {
 	do {
 		//begin overlapped reading
 		//returns TRUE if reading done immediately, false if error OR waiting
-		if (!ReadFile(*h, &chRead, 1, &dwRead, osReader.get())) {
+		if (!ReadFile(hSerial, &chRead, 1, &dwRead, osReader.get())) {
 			if (GetLastError() != ERROR_IO_PENDING) {   // read not delayed?
-				//Error occoured
-				break;
+				throw serial_io_error(std::string("Reading failed on port ") + portName);
 			}
 			else {
 				//read not done immediately, need to wait
@@ -221,9 +228,8 @@ inline void readAvailable(HANDLE* h, std::string& dest) {
 			switch (dwRes) {
 				// Read completed.
 			case WAIT_OBJECT_0:
-				if (!GetOverlappedResult(*h, osReader.get(), &dwRead, FALSE)) {
-					// Error in communications; report it.
-					//break;
+				if (!GetOverlappedResult(hSerial, osReader.get(), &dwRead, FALSE)) {
+					throw serial_io_error(std::string("Reading failed on port ") + portName);
 				}
 				else {
 					// Read completed successfully.
@@ -243,13 +249,13 @@ inline void readAvailable(HANDLE* h, std::string& dest) {
 				// to issue another read until the first one finishes.
 				//
 				// This is a good time to do some background work.
-				break;
+				throw serial_io_error(std::string("Reading failed on port ") + portName);
 
 			default:
 				// Error in the WaitForSingleObject; abort.
 				// This indicates a problem with the OVERLAPPED structure's
 				// event handle.
-				break;
+				throw serial_io_error(std::string("Reading failed on port ") + portName);
 			}
 		}
 	} while (dwRead);	//while the bytes read is greater than 0, read
@@ -271,10 +277,10 @@ std::string SerialPort::readOnEvent() {
 
 	
 	if (WaitCommEvent(hSerial, &dwCommEvent, NULL)) {
-		readAvailable(&hSerial, msg);
+		readAvailable(msg);
 	}
 	else {
-		// Error in WaitCommEvent
+		throw serial_io_error(std::string("Reading failed on port ") + portName);
 	}
 	return msg;
 }

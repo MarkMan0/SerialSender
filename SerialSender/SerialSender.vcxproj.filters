@@ -19,6 +19,9 @@
     <Filter Include="Source Files\commands">
       <UniqueIdentifier>{22794b55-89b0-4766-a768-315155b37c52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\exceptions">
+      <UniqueIdentifier>{584b08be-7dc2-40c2-90a6-e9826060eef3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\commands\Send.h">
@@ -50,6 +53,12 @@
     </ClInclude>
     <ClInclude Include="..\include\commands\Close.h">
       <Filter>Header Files\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\exceptions\invalid_port_error.h">
+      <Filter>Header Files\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\exceptions\serial_io_error.h">
+      <Filter>Header Files\exceptions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
