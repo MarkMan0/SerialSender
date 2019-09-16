@@ -2,6 +2,9 @@
 #include <list>
 #include <string>
 #include <queue>
+#include <thread>
+#include <shared_mutex>
+#include <atomic>
 
 class MessageHandler {
 
@@ -25,8 +28,13 @@ private:
 	};
 
 	std::priority_queue<StrPair, std::deque<StrPair> > sendQueue;
+	std::shared_mutex queueMtx;
 
-	bool okFlag;
+	std::atomic<bool> okFlag;
+
+	void sendNow();
+
+	std::thread sender;
 
 public:
 	//adds a higher priority message to the queue
