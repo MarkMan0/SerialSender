@@ -136,6 +136,7 @@
     <ClInclude Include="..\include\commands\Send.h" />
     <ClInclude Include="..\include\exceptions\invalid_port_error.h" />
     <ClInclude Include="..\include\exceptions\serial_io_error.h" />
+    <ClInclude Include="..\include\MessageHandler.h" />
     <ClInclude Include="..\include\PrinterState.h" />
     <ClInclude Include="..\include\SerialManager.h" />
     <ClInclude Include="..\include\SerialPort.h" />
@@ -147,6 +148,7 @@
     <ClCompile Include="..\src\commands\Open.cpp" />
     <ClCompile Include="..\src\commands\Send.cpp" />
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\MessageHandler.cpp" />
     <ClCompile Include="..\src\SerialManager.cpp" />
     <ClCompile Include="..\src\SerialPort.cpp" />
   </ItemGroup>
