@@ -3,6 +3,17 @@
 
 #include <shared_mutex>
 
+void MessageHandler::sendNow() {
+
+
+	std::unique_lock<std::shared_mutex> lck(queueMtx);	//lock the queue
+
+	if (!sendQueue.empty()) {
+		mng->writeMsg(sendQueue.top());
+		sendQueue.pop();
+	}
+}
+
 void MessageHandler::enqueueSend(const std::string& s, int priority = 1) {
 	sendQueue.push(std::move(StrPair(s, priority)));
 }
@@ -21,7 +32,6 @@ void MessageHandler::handleResponse(const std::string& s) {
 
 	if (s.find("echo") != notFound) {
 		//echo response
-		std::unique_lock<std::shared_mutex> lck(queueMtx);	//lock the queue
 		responses.push_back(s);
 	}
 	else if(s.find(" T:") != notFound) {
@@ -38,8 +48,9 @@ void MessageHandler::handleResponse(const std::string& s) {
 		//resend request
 	}
 	else {
-		std::unique_lock<std::shared_mutex> lck(queueMtx);	//lock the queue
 		responses.push_back(s);
 	}
-
 }
+
+
+

@@ -6,6 +6,8 @@
 #include <shared_mutex>
 #include <atomic>
 
+#include "SerialManager.h"
+
 class MessageHandler {
 
 private:
@@ -25,6 +27,10 @@ private:
 		bool operator<(const StrPair& s2) const {
 			return this->priority < s2.priority;
 		}
+
+		operator const std::string&() const {
+			return str;
+		}
 	};
 
 	std::priority_queue<StrPair, std::deque<StrPair> > sendQueue;
@@ -35,6 +41,8 @@ private:
 	void sendNow();
 
 	std::thread sender;
+
+	std::shared_ptr<SerialManager> mng;
 
 public:
 	//adds a higher priority message to the queue
