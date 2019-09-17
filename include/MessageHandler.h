@@ -40,9 +40,16 @@ private:
 
 	void sendNow();
 
-	std::thread sender;
+	std::thread senderThread;
+
+	std::atomic<bool> endCondition;
+
+	void sendParallel();
 
 	std::shared_ptr<SerialManager> mng;
+
+	std::mutex notifyMtx;
+	std::condition_variable condVar; 
 
 public:
 	//adds a higher priority message to the queue
@@ -51,8 +58,13 @@ public:
 	//emplaces the strings denoted by b and e to the queue, with a default low priority
 	template<typename T>
 	void enqueueSend(T b, T e, int priority = 0) {
+		std::lock_guard<std::mutex> lck(queueMtx);	//lock the queue
+
+		std::lock_guard<std::mutex> notifLck(notifyMtx); //lock the condition mutex
 		while (b != e)
-			sendQueue.push(std::move(StrPair(*b++, priority)));
+			sendQueue.push(std::move(StrPair(*b++, priority)));	//perform modification
+
+		condVar.notify_all();
 	}
 
 	std::string getLastResponse();

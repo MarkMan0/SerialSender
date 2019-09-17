@@ -5,17 +5,31 @@
 
 void MessageHandler::sendNow() {
 
-	if (!sendQueue.empty()) {
-		mng->writeMsg(sendQueue.top());
-		std::lock_guard<std::mutex> lck(queueMtx);	//lock the queue
-		sendQueue.pop();
+	mng->writeMsg(sendQueue.top());
+	std::lock_guard<std::mutex> lck(queueMtx);	//lock the queue
+	sendQueue.pop();
+}
+
+void MessageHandler::sendParallel() {
+
+	if (sendQueue.empty()) {
+		//wait for condition variable to change, becasue there are no messages
+		std::unique_lock<std::mutex> lck(notifyMtx);
+		condVar.wait(lck, [&]()->bool { return !sendQueue.empty(); });
 	}
+	sendNow();
 }
 
 void MessageHandler::enqueueSend(const std::string& s, int priority = 1) {
+	std::lock_guard<std::mutex> lck(queueMtx);	//lock the queue
 	sendQueue.push(std::move(StrPair(s, priority)));
 }
 
+
+std::string MessageHandler::getLastResponse() {
+	std::string resp(responses.back());
+	return std::string();
+}
 
 void MessageHandler::handleResponse(const std::string& s) {
 	/*there are four types of messages:
