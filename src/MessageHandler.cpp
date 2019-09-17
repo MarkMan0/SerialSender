@@ -1,15 +1,13 @@
 #include "MessageHandler.h"
 #include "..\include\MessageHandler.h"
 
-#include <shared_mutex>
+#include <mutex>
 
 void MessageHandler::sendNow() {
 
-
-	std::unique_lock<std::shared_mutex> lck(queueMtx);	//lock the queue
-
 	if (!sendQueue.empty()) {
 		mng->writeMsg(sendQueue.top());
+		std::lock_guard<std::mutex> lck(queueMtx);	//lock the queue
 		sendQueue.pop();
 	}
 }

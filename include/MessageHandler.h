@@ -3,7 +3,7 @@
 #include <string>
 #include <queue>
 #include <thread>
-#include <shared_mutex>
+#include <mutex>
 #include <atomic>
 
 #include "SerialManager.h"
@@ -34,7 +34,7 @@ private:
 	};
 
 	std::priority_queue<StrPair, std::deque<StrPair> > sendQueue;
-	std::shared_mutex queueMtx;
+	std::mutex queueMtx;
 
 	std::atomic<bool> okFlag;
 
