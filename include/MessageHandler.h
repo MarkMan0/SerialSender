@@ -35,21 +35,25 @@ private:
 
 	std::priority_queue<StrPair, std::deque<StrPair> > sendQueue;
 	std::mutex queueMtx;
+	std::mutex notifyMtx;
+	std::condition_variable queueCondVar;
 
-	std::atomic<bool> okFlag;
+	
 
 	void sendNow();
 
 	std::thread senderThread;
-
 	std::atomic<bool> endCondition;
 
 	void sendParallel();
-
 	std::shared_ptr<SerialManager> mng;
 
-	std::mutex notifyMtx;
-	std::condition_variable condVar; 
+
+	bool okFlag = false;
+	void waitOK();
+	std::mutex okMtx;
+	std::condition_variable okCondVar;
+
 
 public:
 	//adds a higher priority message to the queue
@@ -64,7 +68,7 @@ public:
 		while (b != e)
 			sendQueue.push(std::move(StrPair(*b++, priority)));	//perform modification
 
-		condVar.notify_all();
+		queueCondVar.notify_all();
 	}
 
 	std::string getLastResponse();

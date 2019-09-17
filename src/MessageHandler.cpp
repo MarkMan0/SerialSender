@@ -15,9 +15,16 @@ void MessageHandler::sendParallel() {
 	if (sendQueue.empty()) {
 		//wait for condition variable to change, becasue there are no messages
 		std::unique_lock<std::mutex> lck(notifyMtx);
-		condVar.wait(lck, [&]()->bool { return !sendQueue.empty(); });
+		queueCondVar.wait(lck, [&]()->bool { return !sendQueue.empty(); });
 	}
 	sendNow();
+	waitOK();
+}
+
+void MessageHandler::waitOK() {
+	std::unique_lock<std::mutex> lck(okMtx);
+	okCondVar.wait(lck, [&]()->bool { return okFlag; });
+	okFlag = false;
 }
 
 void MessageHandler::enqueueSend(const std::string& s, int priority = 1) {
