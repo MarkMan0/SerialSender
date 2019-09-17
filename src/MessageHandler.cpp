@@ -61,7 +61,9 @@ void MessageHandler::handleResponse(const std::string& s) {
 	}
 	else if(s.find("ok") != notFound) {
 		//ok received
+		std::lock_guard<std::mutex> lck(okMtx);
 		okFlag = true;
+		okCondVar.notify_all();
 	}
 	else if (s.find("") != notFound) {
 		//resend request
