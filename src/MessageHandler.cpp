@@ -12,13 +12,19 @@ void MessageHandler::sendNow() {
 
 void MessageHandler::sendParallel() {
 
-	if (sendQueue.empty()) {
-		//wait for condition variable to change, becasue there are no messages
-		std::unique_lock<std::mutex> lck(notifyMtx);
-		queueCondVar.wait(lck, [&]()->bool { return !sendQueue.empty(); });
-	}
-	sendNow();
-	waitOK();
+	while (1) {
+		if (sendQueue.empty()) {
+			//wait for condition variable to change, becasue there are no messages
+			std::unique_lock<std::mutex> lck(notifyMtx);
+			queueCondVar.wait(lck, [&]()->bool { return !sendQueue.empty(); });
+		}
+		sendNow();
+		waitOK();
+	}	//TODO: create exit condition
+}
+
+void MessageHandler::run() {
+	senderThread = std::thread(&MessageHandler::sendParallel, this);
 }
 
 void MessageHandler::waitOK() {

@@ -55,6 +55,8 @@ private:
 	std::condition_variable okCondVar;
 
 
+	void run();
+
 public:
 	//adds a higher priority message to the queue
 	void enqueueSend(const std::string&, int);
