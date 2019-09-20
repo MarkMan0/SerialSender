@@ -85,7 +85,7 @@ public:
 
 		std::lock_guard<std::mutex> notifLck(notifyMtx); //lock the condition mutex
 		while (b != e)
-			sendQueue.push(std::move(StrPair(*b++, priority)));	//perform modification
+			sendQueue.emplace(*b++, priority);	//perform modification
 
 		queueCondVar.notify_all();
 	}
