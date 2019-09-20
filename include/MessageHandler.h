@@ -60,6 +60,21 @@ private:
 	void stopThread();
 
 public:
+
+	MessageHandler(std::shared_ptr<SerialManager> _mng) : mng(_mng) {
+		runThread();
+	}
+	MessageHandler(const MessageHandler& old) = delete;	//no copy
+	MessageHandler(const MessageHandler&& old);	//TODO: implement move constructor
+	MessageHandler& operator=(const MessageHandler& rhs) = delete; //no assignment
+	MessageHandler& operator=(MessageHandler&& rhs);	//TODO: implement move assignment
+	~MessageHandler() {
+		try {
+			//stopThread();
+		}
+		catch (...) {}
+	}
+
 	//adds a higher priority message to the queue
 	void enqueueSend(const std::string&, int);
 
@@ -79,11 +94,6 @@ public:
 
 	void handleResponse(const std::string&);
 
-	~MessageHandler() {
-		try {
-			//stopThread();
-		}
-		catch (...) {}
-	}
+	
 };
 
