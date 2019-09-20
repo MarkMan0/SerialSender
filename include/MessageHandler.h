@@ -42,7 +42,7 @@ private:
 
 	void sendNow();
 
-	state senderState = NO_WORK;
+	std::atomic<state> senderState = NO_WORK;
 
 	std::thread senderThread;
 	std::atomic<bool> threadRunning;
