@@ -43,7 +43,7 @@ private:
 	void sendNow();
 
 	std::thread senderThread;
-	std::atomic<bool> endCondition;
+	std::atomic<bool> threadRunning;
 
 	void sendParallel();
 	std::shared_ptr<SerialManager> mng;
@@ -54,8 +54,10 @@ private:
 	std::mutex okMtx;
 	std::condition_variable okCondVar;
 
+	
+	void runThread();
 
-	void run();
+	void stopThread();
 
 public:
 	//adds a higher priority message to the queue
@@ -76,5 +78,12 @@ public:
 	std::string getLastResponse();
 
 	void handleResponse(const std::string&);
+
+	~MessageHandler() {
+		try {
+			//stopThread();
+		}
+		catch (...) {}
+	}
 };
 
