@@ -26,7 +26,10 @@ void MessageHandler::sendParallel() {
 
 void MessageHandler::waitOK() {
 	std::unique_lock<std::mutex> lck(okMtx);
-	okCondVar.wait(lck, [&]()->bool { return okFlag; });
+	if (!okFlag) {
+		okCondVar.wait(lck, [&]()->bool { return okFlag; });
+	}
+
 	okFlag = false;
 }
 
