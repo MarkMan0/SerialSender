@@ -38,11 +38,11 @@ private:
 	std::mutex notifyMtx;
 	std::condition_variable queueCondVar;
 
-	enum state { HAS_WORK, NO_WORK, SHUTDOWN };
+	enum state { WORK, SHUTDOWN };
 
 	void sendNow();
 
-	std::atomic<state> senderState = NO_WORK;
+	std::atomic<state> senderState = WORK;
 
 	std::thread senderThread;
 	std::atomic<bool> threadRunning;
@@ -55,7 +55,7 @@ private:
 	void waitOK();
 	std::mutex okMtx;
 	std::condition_variable okCondVar;
-
+	std::atomic<state> okState = NO_WORK;
 	
 	void runThread();
 
@@ -90,7 +90,7 @@ public:
 			sendQueue.emplace(*b++, priority);	//perform modification
 
 		if (senderState != SHUTDOWN) {
-			senderState = HAS_WORK;
+			senderState = WORK;
 		}
 
 		queueCondVar.notify_all();

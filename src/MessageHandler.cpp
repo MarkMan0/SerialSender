@@ -32,8 +32,8 @@ void MessageHandler::sendParallel() {
 
 void MessageHandler::waitOK() {
 	std::unique_lock<std::mutex> lck(okMtx);
-	if (!okFlag) {
-		okCondVar.wait(lck, [&]()->bool { return okFlag; });
+	if (!okFlag || okState == SHUTDOWN) {
+		okCondVar.wait(lck, [&]()->bool { return okState == SHUTDOWN || (okState == WORK && okFlag); });
 	}
 
 	okFlag = false;
@@ -58,9 +58,6 @@ void MessageHandler::enqueueSend(const std::string& s, int priority = 1) {
 	std::lock_guard<std::mutex> lck(queueMtx);	//lock the queue
 	std::lock_guard<std::mutex> notifLck(notifyMtx); //lock the condition mutex
 	
-	if (senderState != SHUTDOWN) {
-		senderState = HAS_WORK;
-	}
 	
 	sendQueue.emplace(s, priority);
 	queueCondVar.notify_all();
