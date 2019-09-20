@@ -16,8 +16,14 @@ void MessageHandler::sendParallel() {
 		if (sendQueue.empty()) {
 			//wait for condition variable to change, becasue there are no messages
 			std::unique_lock<std::mutex> lck(notifyMtx);
-			queueCondVar.wait(lck, [&]()->bool { return !sendQueue.empty(); });
+			queueCondVar.wait(lck, [&]()->bool { 
+				if (!sendQueue.empty() || senderState == SHUTDOWN)
+					return true;
+				return false;
+			});
 		}
+		if (senderState == SHUTDOWN)
+			return;
 		sendNow();
 		waitOK();
 	}	//TODO: create exit condition
@@ -39,7 +45,11 @@ void MessageHandler::runThread() {
 }
 
 void MessageHandler::stopThread() {
-	//this doesnt work yet, need to wake the thread from waiting on the condition variable
+	{
+		std::lock_guard<std::mutex> lck(notifyMtx);
+		senderState = SHUTDOWN;
+		queueCondVar.notify_all();
+	}
 	threadRunning = false;
 	senderThread.join();
 }
@@ -47,6 +57,11 @@ void MessageHandler::stopThread() {
 void MessageHandler::enqueueSend(const std::string& s, int priority = 1) {
 	std::lock_guard<std::mutex> lck(queueMtx);	//lock the queue
 	std::lock_guard<std::mutex> notifLck(notifyMtx); //lock the condition mutex
+	
+	if (senderState != SHUTDOWN) {
+		senderState = HAS_WORK;
+	}
+	
 	sendQueue.emplace(s, priority);
 	queueCondVar.notify_all();
 }

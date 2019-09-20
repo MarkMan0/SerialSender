@@ -38,9 +38,11 @@ private:
 	std::mutex notifyMtx;
 	std::condition_variable queueCondVar;
 
-	
+	enum state { HAS_WORK, NO_WORK, SHUTDOWN };
 
 	void sendNow();
+
+	state senderState = NO_WORK;
 
 	std::thread senderThread;
 	std::atomic<bool> threadRunning;
@@ -86,6 +88,10 @@ public:
 		std::lock_guard<std::mutex> notifLck(notifyMtx); //lock the condition mutex
 		while (b != e)
 			sendQueue.emplace(*b++, priority);	//perform modification
+
+		if (senderState != SHUTDOWN) {
+			senderState = HAS_WORK;
+		}
 
 		queueCondVar.notify_all();
 	}
