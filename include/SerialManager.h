@@ -6,6 +6,7 @@
 #include <mutex>
 #include <thread>
 #include <list>
+#include <atomic>
 
 
 
@@ -36,7 +37,7 @@ private:
     void readThread();		//thread where we are waiting for serial events
     std::thread t;
 
-	bool threadRunning = false;	//used as condition in the thread infinite loop
+	std::atomic<bool> threadRunning = false;	//used as condition in the thread infinite loop
 
 public:
     SerialManager(const SerialManager&) = delete;       //no copy
