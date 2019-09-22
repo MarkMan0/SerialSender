@@ -79,7 +79,7 @@ void SerialManager::closePort() noexcept {
 	stopThread();
 }
 
-std::string SerialManager::lastMsg() {
+std::string SerialManager::lastMsg() const {
 	if(msgCont.size() > 0)
 		return msgCont.front();
 

@@ -59,11 +59,11 @@ public:
 
     void closePort() noexcept;	//close the port
 
-    bool isOpen() {return port.open(); }	//check if the port is open
+    bool isOpen() const {return port.open(); }	//check if the port is open
 
 
     std::string nextMsg();      //gets the latest message
-    std::string lastMsg();
+    std::string lastMsg() const;
 
     void writeMsg(const std::string& );     //sends a message through the port
 
