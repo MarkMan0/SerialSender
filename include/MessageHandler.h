@@ -51,11 +51,11 @@ private:
 	std::shared_ptr<SerialManager> mng;
 
 
-	bool okFlag = false;
+	std::atomic<bool> okFlag = false;
 	void waitOK();
 	std::mutex okMtx;
 	std::condition_variable okCondVar;
-	std::atomic<state> okState = NO_WORK;
+	std::atomic<state> okState = WORK;
 	
 	void runThread();
 
@@ -67,7 +67,7 @@ public:
 		runThread();
 	}
 	MessageHandler(const MessageHandler& old) = delete;	//no copy
-	MessageHandler(const MessageHandler&& old);	//TODO: implement move constructor
+	MessageHandler(MessageHandler&& old) noexcept;	//TODO: implement move constructor
 	MessageHandler& operator=(const MessageHandler& rhs) = delete; //no assignment
 	MessageHandler& operator=(MessageHandler&& rhs);	//TODO: implement move assignment
 	~MessageHandler() {
