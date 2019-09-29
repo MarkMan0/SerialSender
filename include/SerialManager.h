@@ -6,8 +6,10 @@
 #include <mutex>
 #include <thread>
 #include <list>
+#include <memory>
 
 
+class MessageHandler;
 
 class SerialManager {
 public:
@@ -17,7 +19,7 @@ public:
 
 private:
 
-
+	std::weak_ptr<MessageHandler> msgHandler;
 
     SerialPort port;        //the underlying serial port
 
@@ -39,6 +41,11 @@ public:
     SerialManager& operator=(const SerialManager& ) = delete;   //no assign
 
 	SerialManager() = default;
+
+	//assing a handler to the shared_ptr
+	void setHandler(const std::shared_ptr<MessageHandler>& h) {
+		msgHandler = h;
+	}
 
     //constructos also open the port
     SerialManager(const std::string& _name, unsigned long _baud);

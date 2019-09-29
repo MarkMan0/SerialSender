@@ -16,6 +16,7 @@
 #include "SerialManager.h"
 #include "commands/Open.h"
 #include "commands/Close.h"
+#include "MessageHandler.h"
 #include <limits>
 
 int main()
@@ -25,7 +26,9 @@ int main()
 	{
 		std::shared_ptr<SerialManager> mng(new SerialManager());
 		cout << "end" << endl;
+		auto msgHandler = std::make_shared<MessageHandler>(mng);
 
+		mng->setHandler(msgHandler);
 
 		CommandHandler handler;
 

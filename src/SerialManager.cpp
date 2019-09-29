@@ -8,6 +8,8 @@
 #include <thread>
 #include <chrono>
 
+#include "MessageHandler.h"
+
 #include "exceptions/serial_io_error.h"
 
 SerialManager::SerialManager(const std::string& _name, unsigned long _baud) : portName(_name), baud(_baud) {
@@ -97,6 +99,8 @@ void SerialManager::readThread() {
 				if (msg.size() > 0) {	//reponse was not empty
 					for (char c : msg) {
 						if (c == '\n') {
+							auto shared = msgHandler.lock();
+							shared->handleResponse(oneLine);
 							std::cout << oneLine << std::endl;
 							oneLine.clear();
 						}
