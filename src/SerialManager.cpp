@@ -79,18 +79,6 @@ void SerialManager::closePort() noexcept {
 	stopThread();
 }
 
-std::string SerialManager::lastMsg() {
-	if(msgCont.size() > 0)
-		return msgCont.front();
-
-	return "";
-}
-
-std::string SerialManager::nextMsg() {
-	if (msgCont.size() > 0)
-		return msgCont.back();
-	return "";
-}
 
 //sends a message when the port mutex is free
 void SerialManager::writeMsg(const std::string& msg) {
@@ -109,7 +97,6 @@ void SerialManager::readThread() {
 				if (msg.size() > 0) {	//reponse was not empty
 					for (char c : msg) {
 						if (c == '\n') {
-							msgCont.push_front(oneLine);
 							std::cout << oneLine << std::endl;
 							oneLine.clear();
 						}

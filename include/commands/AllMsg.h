@@ -15,10 +15,7 @@ namespace Commands {
         AllMsgCmd(const std::shared_ptr<SerialManager> _manager) : Command("AllMsg", _manager) {}
 
         void execute(const std::string& cmd) override {
-            std::string str;
-            while((str = manager->nextMsg()).size() > 1) {
-                std::cout << str << std::endl;
-            }
+			std::cerr << "NOT IMPLEMNTED" << std::endl;
         } 
     };
 }

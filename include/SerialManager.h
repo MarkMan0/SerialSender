@@ -24,10 +24,6 @@ private:
 	std::string portName;
 	unsigned long baud;
 
-    typedef std::list<std::string> MsgCont;  //TODO: this needs to be changed
-
-    MsgCont msgCont;        //read messages go here
-
 	//		THREAD REALTED FUNCTIONS
 
 	void startThread();		//helper functions that start the thread and set a flag
@@ -60,9 +56,6 @@ public:
 
     bool isOpen() {return port.open(); }	//check if the port is open
 
-
-    std::string nextMsg();      //gets the latest message
-    std::string lastMsg();
 
     void writeMsg(const std::string& );     //sends a message through the port
 
