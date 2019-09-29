@@ -54,7 +54,7 @@ void MessageHandler::stopThread() {
 	senderThread.join();
 }
 
-void MessageHandler::enqueueSend(const std::string& s, int priority = 1) {
+void MessageHandler::enqueueSend(const std::string& s, int priority) {
 	std::lock_guard<std::mutex> lck(queueMtx);	//lock the queue
 	std::lock_guard<std::mutex> notifLck(notifyMtx); //lock the condition mutex
 	

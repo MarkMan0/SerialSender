@@ -78,7 +78,7 @@ public:
 	}
 
 	//adds a higher priority message to the queue
-	void enqueueSend(const std::string&, int);
+	void enqueueSend(const std::string&, int priority = 1);
 
 	//emplaces the strings denoted by b and e to the queue, with a default low priority
 	template<typename T>
