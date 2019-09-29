@@ -16,6 +16,7 @@
 #include "SerialManager.h"
 #include "commands/Open.h"
 #include "commands/Close.h"
+#include "MessageHandler.h"
 #include <limits>
 
 int main()
@@ -25,15 +26,17 @@ int main()
 	{
 		std::shared_ptr<SerialManager> mng(new SerialManager());
 		cout << "end" << endl;
+		auto msgHandler = std::make_shared<MessageHandler>(mng);
 
+		mng->setHandler(msgHandler);
 
 		CommandHandler handler;
 
-		handler.registerCommand(std::make_unique<Commands::SendCmd>(mng));
+		handler.registerCommand(std::make_unique<Commands::SendCmd>(msgHandler));
 
-		handler.registerCommand(std::make_unique<Commands::ExitCmd>(mng));
+		handler.registerCommand(std::make_unique<Commands::ExitCmd>(mng, msgHandler));
 
-		handler.registerCommand(std::make_unique<Commands::AllMsgCmd>(mng));
+		handler.registerCommand(std::make_unique<Commands::AllMsgCmd>(msgHandler));
 
 		handler.registerCommand(std::make_unique<Commands::OpenCmd>(mng));
 

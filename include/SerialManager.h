@@ -6,9 +6,11 @@
 #include <mutex>
 #include <thread>
 #include <list>
+#include <memory>
 #include <atomic>
 
 
+class MessageHandler;
 
 class SerialManager {
 public:
@@ -18,16 +20,12 @@ public:
 
 private:
 
-
+	std::weak_ptr<MessageHandler> msgHandler;
 
     SerialPort port;        //the underlying serial port
 
 	std::string portName;
 	unsigned long baud;
-
-    typedef std::list<std::string> MsgCont;  //TODO: this needs to be changed
-
-    MsgCont msgCont;        //read messages go here
 
 	//		THREAD REALTED FUNCTIONS
 
@@ -44,6 +42,11 @@ public:
     SerialManager& operator=(const SerialManager& ) = delete;   //no assign
 
 	SerialManager() = default;
+
+	//assing a handler to the shared_ptr
+	void setHandler(const std::shared_ptr<MessageHandler>& h) {
+		msgHandler = h;
+	}
 
     //constructos also open the port
     SerialManager(const std::string& _name, unsigned long _baud);
@@ -63,7 +66,7 @@ public:
 
 
     std::string nextMsg();      //gets the latest message
-    std::string lastMsg() const;
+    std::string lastMsg();
 
     void writeMsg(const std::string& );     //sends a message through the port
 

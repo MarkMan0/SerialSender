@@ -60,6 +60,9 @@
     <ClInclude Include="..\include\exceptions\serial_io_error.h">
       <Filter>Header Files\exceptions</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\MessageHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\commands\Exit.cpp">
@@ -85,6 +88,9 @@
     </ClCompile>
     <ClCompile Include="..\src\commands\Close.cpp">
       <Filter>Source Files\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MessageHandler.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
