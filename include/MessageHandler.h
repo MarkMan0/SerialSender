@@ -38,14 +38,13 @@ private:
 	std::mutex notifyMtx;
 	std::condition_variable queueCondVar;
 
-	enum state { WORK, SHUTDOWN };
+	enum state { RUNNING, NORM_STOP, ERR_STOP, SHUTDOWN };
 
 	void sendNow();
 
-	std::atomic<state> senderState = WORK;
+	std::atomic<state> senderState = NORM_STOP;
 
 	std::thread senderThread;
-	std::atomic<bool> threadRunning;
 
 	void sendParallel();
 	std::shared_ptr<SerialManager> mng;
@@ -55,7 +54,6 @@ private:
 	void waitOK();
 	std::mutex okMtx;
 	std::condition_variable okCondVar;
-	std::atomic<state> okState = WORK;
 	
 	void runThread();
 
@@ -72,7 +70,7 @@ public:
 	MessageHandler& operator=(MessageHandler&& rhs);	//TODO: implement move assignment
 	~MessageHandler() {
 		try {
-			//stopThread();
+			stopThread();
 		}
 		catch (...) {}
 	}
@@ -83,14 +81,20 @@ public:
 	//emplaces the strings denoted by b and e to the queue, with a default low priority
 	template<typename T>
 	void enqueueSend(T b, T e, int priority = 0) {
+
+		if (b == e)	return;	//check for empty range, to avoid unnecessary mutex locks
+
+		if (senderState != RUNNING) {
+			runThread();	//if the thread is not yet running, start it
+		}
 		std::lock_guard<std::mutex> lck(queueMtx);	//lock the queue
 
 		std::lock_guard<std::mutex> notifLck(notifyMtx); //lock the condition mutex
 		while (b != e)
 			sendQueue.emplace(*b++, priority);	//perform modification
 
-		if (senderState != SHUTDOWN) {
-			senderState = WORK;
+		if (senderState != SHUTDOWN && senderState != RUNNING) {
+			runThread();
 		}
 
 		queueCondVar.notify_all();

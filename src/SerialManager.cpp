@@ -31,9 +31,9 @@ void SerialManager::openPort(const std::string& _name, unsigned long _baud) {
 		port.close();
 	}
 
-	if (threadRunning) {
-		stopThread();
-	}
+
+	stopThread();
+	
 
 	portName = _name;
 	baud = _baud;
@@ -60,17 +60,22 @@ SerialManager::~SerialManager() {
 
 
 void SerialManager::startThread() {
-	if (!threadRunning) {
+	if (threadState == ERR_STOP) {
+		//thread stopped on error, join it
+		t.join();
+		threadState = NORM_STOP;
+	}
+	if (threadState == NORM_STOP) {
+		threadState = RUNNING;
 		t = std::thread(&SerialManager::readThread, this);
-		threadRunning = true;
 	}
 }
 
 
 void SerialManager::stopThread() {
-	if (threadRunning) {
-		threadRunning = false;
+	if (threadState == RUNNING || threadState == ERR_STOP) {
 		t.join();
+		threadState = NORM_STOP;
 	}
 }
 
@@ -89,7 +94,7 @@ void SerialManager::writeMsg(const std::string& msg) {
 
 void SerialManager::readThread() {
 	std::string oneLine;
-	while (threadRunning) {
+	while (threadState == RUNNING) {
 		if (port.open()) {
 			try {
 				auto msg = port.readOnEvent();
@@ -112,11 +117,21 @@ void SerialManager::readThread() {
 			} 
 			catch (serial_io_error& e) {
 				std::cerr << "Serial error occoured:\n\t" << e.what() << std::endl;
+				threadState = ERR_STOP;
+				//port.close();
+				break;
 			}
 			catch (std::runtime_error& e) {
 				std::cerr << "System error occoured:\n\t" << e.what() << std::endl;
+				threadState = ERR_STOP;
+				//port.close();
+				break;
 				//TODO: close port
 			}
+		}
+		else {
+			threadState = ERR_STOP;
+			break;
 		}
 		
 	}

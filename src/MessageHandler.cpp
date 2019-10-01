@@ -2,6 +2,8 @@
 #include "..\include\MessageHandler.h"
 
 #include <mutex>
+#include <iostream>
+#include "exceptions\serial_io_error.h"
 
 void MessageHandler::sendNow() {
 
@@ -12,52 +14,71 @@ void MessageHandler::sendNow() {
 
 void MessageHandler::sendParallel() {
 
-	while (threadRunning) {
+	while (senderState == RUNNING) {
 		if (sendQueue.empty()) {
 			//wait for condition variable to change, becasue there are no messages
 			std::unique_lock<std::mutex> lck(notifyMtx);
 			queueCondVar.wait(lck, [&]()->bool { 
-				if (!sendQueue.empty() || senderState == SHUTDOWN)
+				if (!sendQueue.empty() || senderState == NORM_STOP || senderState == SHUTDOWN)
 					return true;
 				return false;
 			});
 		}
-		if (senderState == SHUTDOWN)
-			return;
-		sendNow();
-		waitOK();
-	}	//TODO: create exit condition
+		if (senderState == NORM_STOP || senderState == SHUTDOWN)
+			break;
+		try {
+			sendNow();
+			waitOK();
+		}
+		catch (serial_io_error& e) {
+			std::cerr << "Send failed: \n\t" << e.what() << std::endl;
+			senderState = ERR_STOP;
+			break;
+		}
+	}
 }
 
 
 void MessageHandler::waitOK() {
 	std::unique_lock<std::mutex> lck(okMtx);
-	if (!okFlag || okState == SHUTDOWN) {
-		okCondVar.wait(lck, [&]()->bool { return okState == SHUTDOWN || (okState == WORK && okFlag); });
+	if (!okFlag) {
+		okCondVar.wait(lck, [&]()->bool {
+			if (okFlag) return true;	//there was an OK
+			else if (senderState == SHUTDOWN || senderState == NORM_STOP)	return true;	//thread needs to be shut down
+			else return false;	//keep waiting
+			});
 	}
 
 	okFlag = false;
 }
 
 void MessageHandler::runThread() {
-	threadRunning = true;
+	stopThread();
+	senderState = RUNNING;
 	senderThread = std::thread(&MessageHandler::sendParallel, this);
 }
 
 void MessageHandler::stopThread() {
-	{
-		std::lock_guard<std::mutex> lck(notifyMtx);
-		senderState = SHUTDOWN;
-		queueCondVar.notify_all();
+	if (senderState == RUNNING || senderState == ERR_STOP) {
+		{	//scoped so condition variable mutexes are released
+			std::lock_guard<std::mutex> lck(notifyMtx);
+			senderState = SHUTDOWN;
+			queueCondVar.notify_all();	//this gets it out from waiting on a queue insert
+			okCondVar.notify_all();		//if waiting on ok, notify with shutdown
+		}
+		senderThread.join();		//wait for the thread to finish
+		senderState = SHUTDOWN;		//if there was an error, consider it handled, since the thread is no longer running
 	}
-	threadRunning = false;
-	senderThread.join();
 }
 
 void MessageHandler::enqueueSend(const std::string& s, int priority) {
+
+	if (senderState != SHUTDOWN && senderState != RUNNING) {	//if not running, and not stopped intentionally
+		runThread();	//if the thread is not yet running, start it
+	}
+
 	std::lock_guard<std::mutex> lck(queueMtx);	//lock the queue
 	std::lock_guard<std::mutex> notifLck(notifyMtx); //lock the condition mutex
-	
 	
 	sendQueue.emplace(s, priority);
 	queueCondVar.notify_all();

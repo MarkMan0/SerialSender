@@ -120,7 +120,9 @@ void SerialPort::readErr() {
 
 void SerialPort::send(const std::string& cmd) {
 
-	if (!isOpen) return;
+	if (!isOpen) {
+		throw serial_io_error("Port is not open");
+	}
 	
 	OVERLAPPED ov = { 0 };
 

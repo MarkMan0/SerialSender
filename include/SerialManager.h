@@ -20,6 +20,8 @@ public:
 
 private:
 
+	enum ThreadStates {RUNNING, NORM_STOP, ERR_STOP};
+
 	std::weak_ptr<MessageHandler> msgHandler;
 
     SerialPort port;        //the underlying serial port
@@ -35,7 +37,7 @@ private:
     void readThread();		//thread where we are waiting for serial events
     std::thread t;
 
-	std::atomic<bool> threadRunning = false;	//used as condition in the thread infinite loop
+	std::atomic<ThreadStates> threadState = NORM_STOP;	//used as condition in the thread infinite loop
 
 public:
     SerialManager(const SerialManager&) = delete;       //no copy
