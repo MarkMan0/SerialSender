@@ -63,6 +63,9 @@
     <ClInclude Include="..\include\MessageHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\commands\LoadFile.h">
+      <Filter>Header Files\commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\commands\Exit.cpp">
@@ -91,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="..\src\MessageHandler.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\commands\LoadFile.cpp">
+      <Filter>Source Files\commands</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -16,6 +16,7 @@
 #include "SerialManager.h"
 #include "commands/Open.h"
 #include "commands/Close.h"
+#include "commands/LoadFile.h"
 #include "MessageHandler.h"
 #include <limits>
 
@@ -41,6 +42,8 @@ int main()
 		handler.registerCommand(std::make_unique<Commands::OpenCmd>(mng));
 
 		handler.registerCommand(std::make_unique<Commands::CloseCmd>(mng));
+
+		handler.registerCommand(std::make_unique<Commands::LoadFileCmd>(msgHandler));
 
 		handler.run();
 	}
