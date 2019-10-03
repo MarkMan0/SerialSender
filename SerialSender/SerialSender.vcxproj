@@ -135,6 +135,8 @@
     <ClInclude Include="..\include\commands\Exit.h" />
     <ClInclude Include="..\include\commands\LoadFile.h" />
     <ClInclude Include="..\include\commands\Open.h" />
+    <ClInclude Include="..\include\commands\PauseSend.h" />
+    <ClInclude Include="..\include\commands\ResumeSend.h" />
     <ClInclude Include="..\include\commands\Send.h" />
     <ClInclude Include="..\include\exceptions\invalid_port_error.h" />
     <ClInclude Include="..\include\exceptions\serial_io_error.h" />
@@ -150,6 +152,8 @@
     <ClCompile Include="..\src\commands\Exit.cpp" />
     <ClCompile Include="..\src\commands\LoadFile.cpp" />
     <ClCompile Include="..\src\commands\Open.cpp" />
+    <ClCompile Include="..\src\commands\PauseSend.cpp" />
+    <ClCompile Include="..\src\commands\ResumeSend.cpp" />
     <ClCompile Include="..\src\commands\Send.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\MessageHandler.cpp" />

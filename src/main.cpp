@@ -18,6 +18,8 @@
 #include "commands/Close.h"
 #include "commands/LoadFile.h"
 #include "commands/ClearQueue.h"
+#include "commands/PauseSend.h"
+#include "commands/ResumeSend.h"
 #include "MessageHandler.h"
 #include <limits>
 
@@ -41,6 +43,8 @@ int main()
 		handler.registerCommand(std::make_unique<Commands::CloseCmd>(mng));
 		handler.registerCommand(std::make_unique<Commands::LoadFileCmd>(msgHandler));
 		handler.registerCommand(std::make_unique<Commands::ClearQueueCmd>(msgHandler));
+		handler.registerCommand(std::make_unique<Commands::PauseSendCmd>(msgHandler));
+		handler.registerCommand(std::make_unique<Commands::ResumeSendCmd>(msgHandler));
 
 
 		handler.run();

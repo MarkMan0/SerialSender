@@ -133,5 +133,13 @@ void MessageHandler::clearQueue() {
 	}
 }
 
+void MessageHandler::pauseSend() {
+	stopThread();
+}
+
+void MessageHandler::resumeSend() {
+	runThread();
+}
+
 
 

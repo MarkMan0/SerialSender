@@ -67,6 +67,12 @@
       <Filter>Header Files\commands</Filter>
     </ClInclude>
     <ClInclude Include="..\include\commands\ClearQueue.h">
+      <Filter>Header Files\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\commands\PauseSend.h">
+      <Filter>Header Files\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\commands\ResumeSend.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -103,6 +109,12 @@
     </ClCompile>
     <ClCompile Include="..\src\commands\ClearQueue.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\commands\ResumeSend.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\commands\PauseSend.cpp">
+      <Filter>Source Files\commands</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

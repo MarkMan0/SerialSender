@@ -105,6 +105,9 @@ public:
 	void handleResponse(const std::string&);
 
 	void clearQueue();
-	
+
+	//TODO: implement
+	void pauseSend();
+	void resumeSend();
 };
 
