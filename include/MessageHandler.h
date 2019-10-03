@@ -104,6 +104,7 @@ public:
 
 	void handleResponse(const std::string&);
 
+	void clearQueue();
 	
 };
 

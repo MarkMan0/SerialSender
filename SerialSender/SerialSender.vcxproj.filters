@@ -66,6 +66,9 @@
     <ClInclude Include="..\include\commands\LoadFile.h">
       <Filter>Header Files\commands</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\commands\ClearQueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\commands\Exit.cpp">
@@ -97,6 +100,9 @@
     </ClCompile>
     <ClCompile Include="..\src\commands\LoadFile.cpp">
       <Filter>Source Files\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\commands\ClearQueue.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

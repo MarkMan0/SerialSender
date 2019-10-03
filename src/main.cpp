@@ -17,6 +17,7 @@
 #include "commands/Open.h"
 #include "commands/Close.h"
 #include "commands/LoadFile.h"
+#include "commands/ClearQueue.h"
 #include "MessageHandler.h"
 #include <limits>
 
@@ -34,16 +35,13 @@ int main()
 		CommandHandler handler;
 
 		handler.registerCommand(std::make_unique<Commands::SendCmd>(msgHandler));
-
 		handler.registerCommand(std::make_unique<Commands::ExitCmd>(mng, msgHandler));
-
 		handler.registerCommand(std::make_unique<Commands::AllMsgCmd>(msgHandler));
-
 		handler.registerCommand(std::make_unique<Commands::OpenCmd>(mng));
-
 		handler.registerCommand(std::make_unique<Commands::CloseCmd>(mng));
-
 		handler.registerCommand(std::make_unique<Commands::LoadFileCmd>(msgHandler));
+		handler.registerCommand(std::make_unique<Commands::ClearQueueCmd>(msgHandler));
+
 
 		handler.run();
 	}

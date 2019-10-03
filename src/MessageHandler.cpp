@@ -125,5 +125,13 @@ void MessageHandler::handleResponse(const std::string& s) {
 	}
 }
 
+void MessageHandler::clearQueue() {
+	std::unique_lock<std::mutex> lck(queueMtx);
+	while (!sendQueue.empty())
+	{
+		sendQueue.pop();
+	}
+}
+
 
 
