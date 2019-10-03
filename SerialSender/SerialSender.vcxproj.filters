@@ -107,13 +107,13 @@
     <ClCompile Include="..\src\commands\LoadFile.cpp">
       <Filter>Source Files\commands</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\commands\ClearQueue.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\commands\PauseSend.cpp">
+      <Filter>Source Files\commands</Filter>
     </ClCompile>
     <ClCompile Include="..\src\commands\ResumeSend.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\commands</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\commands\PauseSend.cpp">
+    <ClCompile Include="..\src\commands\ClearQueue.cpp">
       <Filter>Source Files\commands</Filter>
     </ClCompile>
   </ItemGroup>
