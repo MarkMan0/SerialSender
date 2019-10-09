@@ -5,6 +5,7 @@
 #include <thread>
 #include <mutex>
 #include <atomic>
+#include <functional>
 
 #include "SerialManager.h"
 
@@ -14,26 +15,10 @@ private:
 	std::list<std::string> responses;
 	std::list<std::string> statuses;
 
-	struct StrPair
-	{
-		StrPair(const std::string& _str, int p = 0) : str(_str), priority(p) {}
+	typedef std::pair<std::string, int> StrPair;
 
-		StrPair(StrPair&& old) = default;
-		StrPair& operator=(StrPair&& old) = default;
 
-		std::string str;
-		int priority;
-
-		bool operator<(const StrPair& s2) const {
-			return this->priority < s2.priority;
-		}
-
-		operator const std::string&() const {
-			return str;
-		}
-	};
-
-	std::priority_queue<StrPair, std::deque<StrPair> > sendQueue;
+	std::priority_queue<StrPair, std::deque<StrPair>, std::function<bool(const StrPair&, const StrPair&)> > sendQueue;
 	std::mutex queueMtx;
 	std::mutex notifyMtx;
 	std::condition_variable queueCondVar;
@@ -61,7 +46,8 @@ private:
 
 public:
 
-	MessageHandler(std::shared_ptr<SerialManager> _mng) : mng(_mng) {
+	MessageHandler(std::shared_ptr<SerialManager> _mng) : mng(_mng), sendQueue([](const StrPair& l, const StrPair& r)->bool {
+		return l.second < r.second; }) {
 		runThread();
 	}
 	MessageHandler(const MessageHandler& old) = delete;	//no copy

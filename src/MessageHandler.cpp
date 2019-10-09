@@ -7,7 +7,7 @@
 
 void MessageHandler::sendNow() {
 
-	mng->writeMsg(sendQueue.top());
+	mng->writeMsg(sendQueue.top().first);
 	std::lock_guard<std::mutex> lck(queueMtx);	//lock the queue
 	sendQueue.pop();
 }
